@@ -1,7 +1,3 @@
-/*
-TODO: FIX BODY WIDTH SETTING
-*/
-
 var bandNames = [
     "Auxilery Cheese",
     "Intestinal Distress",

@@ -1,3 +1,5 @@
 Fix body width set on popup
 
 Add all stored urls to page load listener
+
+Extra button to popup for quick name refresh

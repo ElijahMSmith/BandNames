@@ -7,7 +7,7 @@ You can easily copy this name to your clipboard by clicking the button on the po
 
 ## How to enable this extension (not yet available on the chrome store, if ever)
 
-You can get a copy of all the files in this extension by cloning this repository to the desired location with 'git clone https://github.com/ElijahMSmith/BandNames'
+You can get a copy of all the files in this extension by cloning this repository to the desired location with `git clone https://github.com/ElijahMSmith/BandNames`
 
 After cloning the files, go to the chrome extensions manager page by either putting "chrome://extensions" in the url bar or click the three dots in the upper right corner of the window, hover over more tools, then click extensions.
 

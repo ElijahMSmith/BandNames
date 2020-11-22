@@ -11,6 +11,7 @@ window.onload = function(){
 
     //On page load, query all urls from storage and add p for each to urlsDiv
     chrome.storage.sync.get({allUrls: []}, function(result){
+        //Reinsert all urls to storage, log to console success
         //Get urls array from allUrls key
         var urlsArray = result.allUrls;
         //For each url string
@@ -25,21 +26,50 @@ window.onload = function(){
     });
 };
 
+//For debugging
+function printFromStorage(){
+    chrome.storage.sync.get({allUrls: []}, function(result){
+        //Reinsert all urls to storage, log to console success
+        //Get urls array from allUrls key
+        var urlsArray = result.allUrls;
+        //For each url string
+        for(var i = 0; i < urlsArray.length; i++)
+            console.log("urlsArray[" + i + "] = " + urlsArray[i]);
+    });
+}
+
 //Checks thorugh urlsList to verify if url has already been incorporated to list, returning true if it is found
 function alreadyHaveUrl(url){
-    console.log("called - " + urlsList.length);
     for(var i = 0; i < urlsList.length; i++){
-        console.log(urlsList[i] + "vs" + url);
         if(urlsList[i] === url)
             return true;
     }
     return false;
 }
 
+//Update rules for websites that activate the extension
+function addRules(){
+    console.log("Getting storage contents before setting rules");
+    printFromStorage();
+
+    let newConditions = [];
+    for(var current of urlsList)
+        newConditions.push(new chrome.declarativeContent.PageStateMatcher({pageUrl: {hostEquals: current},}));
+
+    chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
+        chrome.declarativeContent.onPageChanged.addRules([{
+            conditions: newConditions,
+            actions: [
+                new chrome.declarativeContent.ShowPageAction()
+            ]
+        }]);
+    });
+}
+
 //Click listener to add button
 addUrlButton.addEventListener("click", function(){
     //Get input text
-    var newUrlText = urlInput.value;
+    var newUrlText = urlInput.value.toLowerCase();
 
     //If url matching input text already exists in list, don't add it again
     if(alreadyHaveUrl(newUrlText)){
@@ -60,6 +90,8 @@ addUrlButton.addEventListener("click", function(){
     chrome.storage.sync.set({allUrls: urlsList}, function(){
         console.log("Updated stored URLs");
     });
+
+    addRules(); //Update urls that trigger popup
 });
 
 //Executes the add url process via clicking on the button when user presses the enter key

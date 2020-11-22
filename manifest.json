@@ -3,7 +3,7 @@
     "version": "1.0",
     "description": "Suggests possible band names as your Discord username!",
     "manifest_version": 2,
-    "permissions": ["declarativeContent", "clipboardRead", "clipboardWrite", "storage"],
+    "permissions": ["declarativeContent", "clipboardRead", "clipboardWrite", "storage", "discord.com"],
     "background": {
         "scripts": ["background.js"],
         "persistent": false

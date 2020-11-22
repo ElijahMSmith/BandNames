@@ -33,5 +33,14 @@ chrome.runtime.onInstalled.addListener(function(){
     printFromStorage();*/
 });
 
+window.addEventListener('click', (event) => {
+    alert("click");
+    console.log("location: " + document.location + ", state: " + JSON.stringify(event.state));
+});
 
-window.open("popup.html", "extension_popup", "width=300,height=400,status=no,scrollbars=yes,resizable=no");
+window.addEventListener('popstate', (event) => {
+    alert("popstate");
+    console.log("location: " + document.location + ", state: " + JSON.stringify(event.state));
+});
+  
+//window.open("popup.html", "extension_popup", "width=300,height=133,status=no,scrollbars=yes,resizable=no");

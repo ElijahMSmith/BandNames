@@ -7,8 +7,6 @@ var body = document.getElementsByTagName('body')[0];
 
 var bandNames = []; //Ever growing list of good band names
 
-
-
 //Reset button to default color
 function resetButton(button){
     //Show button has been clicked by changing appearance slightly
@@ -56,6 +54,9 @@ function newBandName(){
         //Initially reset body to full size so we aren't constricting the newly inserted word
         body.style.width = "300px";
 
+        //Set display of suggestion to temporarily not take the entire width of the popup, letting us measure text width
+        suggestion.style.display = "inline-block";
+
         //Get width of the two longest elements
         var suggestionWidth = suggestion.getBoundingClientRect().width;
         var suggestionHeaderWidth = suggestionHeader.getBoundingClientRect().width;
@@ -74,6 +75,9 @@ function newBandName(){
         suggestionHeader.style.marginLeft = ((newWidth - suggestionHeaderWidth) / 2) + "px";
         copyName.style.marginLeft =  ((newWidth - copyNameWidth) / 2) + "px";
         refreshName.style.marginLeft =  ((newWidth - refreshNameWidth) / 2) + "px";
+
+        //Center in box
+        suggestion.style.display = "block";
     }, 1);
 }
 

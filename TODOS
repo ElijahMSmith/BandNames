@@ -1,7 +1,4 @@
-Add all stored urls to page load listener
-
-Work with content script that can automatically reset the name by interacting with the right elements
-- When the user clicks the set username button on the popup, take the current name and replace username with interacting
+Get event to register in background.js
 
 - Click on user settings, edit name, input new name to the blank, type password
 - Username and password have to be known, possibly put in another JSON file

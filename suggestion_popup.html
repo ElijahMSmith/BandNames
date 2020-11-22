@@ -2,18 +2,30 @@
     <head>
         <style>
             body {
-                height: 130px;
-                width: 250px;
+                height: 133px;
+                width: 300px;
                 background-color: #d4f9ff;
             }
 
             #suggestionHeader, #suggestion {
+                text-align: center;
                 font-weight: bold;
                 display: inline-block;
             }
 
+            #suggestionHeader {
+                margin-top: -22px;
+                margin-bottom: 0px;
+            }
+
+            #suggestion {
+                margin-top: -5px;
+            }
+
             button {
                 display: inline-block;
+                width: 130px;
+                text-align: center;
                 background-color: #ff737c;
                 color: #ffffff;
                 margin-top: 5px;
@@ -21,9 +33,10 @@
         </style>
     </head>
     <body>
-        <p id="suggestionHeader">Suggested Username:</p>
+        <h3 id="suggestionHeader">Suggested Username:</p>
         <h1 id="suggestion">PLACEHOLDER</h1>
         <button id="copyName">Copy to Clipboard</button>
+        <button id="refreshName">Refresh Name</button>
         <script src="loadSuggestion.js"></script>
     </body>
 </html>

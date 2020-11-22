@@ -1,6 +1,23 @@
+//Get body tag, suggestion text/header, and copy/refresh buttons
+var suggestion = document.getElementById('suggestion');
+var copyName = document.getElementById('copyName');
+var refreshName = document.getElementById('refreshName');
+var suggestionHeader = document.getElementById('suggestionHeader');
+var body = document.getElementsByTagName('body')[0];
+
+var bandNames = []; //Ever growing list of good band names
+
+
+
 //Reset button to default color
-function resetButton(){
-    copyName.style.backgroundColor = "#ff737c";
+function resetButton(button){
+    //Show button has been clicked by changing appearance slightly
+    button.style.backgroundColor = "#ff3340";
+
+    //After brief delay, reset button to default style
+    setTimeout(function(){
+        button.style.backgroundColor = "#ff737c";
+    }, 100);
 }
 
 //Copies text input (suggested band name) to clipboard
@@ -30,7 +47,35 @@ function copyTextToClipboard(text) {
     document.body.removeChild(copyFrom);
 }
 
-var bandNames = []; //Ever growing list of good band names
+function newBandName(){
+    //Pick new name and set new text
+    suggestion.innerText = bandNames[Math.floor(Math.random() * bandNames.length)];
+
+    //After we let element attributes update, update box size to match size of the band name
+    setTimeout(function(){
+        //Initially reset body to full size so we aren't constricting the newly inserted word
+        body.style.width = "300px";
+
+        //Get width of the two longest elements
+        var suggestionWidth = suggestion.getBoundingClientRect().width;
+        var suggestionHeaderWidth = suggestionHeader.getBoundingClientRect().width;
+        var copyNameWidth = copyName.getBoundingClientRect().width;
+        var refreshNameWidth = refreshName.getBoundingClientRect().width;
+
+        //Determine width of the longest of the three elements on the popup
+        var newWidth = Math.max(Math.max(suggestionWidth, copyNameWidth), suggestionHeaderWidth);
+
+        //Update body size to max width of elements
+        body.style.width = newWidth + "px";
+
+        //Now to center buttons and title in the box
+
+        //Update body size to max width of elements
+        suggestionHeader.style.marginLeft = ((newWidth - suggestionHeaderWidth) / 2) + "px";
+        copyName.style.marginLeft =  ((newWidth - copyNameWidth) / 2) + "px";
+        refreshName.style.marginLeft =  ((newWidth - refreshNameWidth) / 2) + "px";
+    }, 1);
+}
 
 //Get all band names from JSON file
 async function loadNameData() {
@@ -47,47 +92,24 @@ async function loadNameData() {
 
     response.json().then(data => {
         bandNames = data.allNames;
-        suggestion.innerText = bandNames[Math.floor(Math.random() * bandNames.length)];
+        newBandName();
     });
 }
 
 loadNameData(); //Call that function to load the band names
 
-//Get body tag, suggestion text, and copy button
-var copyName = document.getElementById('copyName');
-var suggestion = document.getElementById('suggestion');
-var suggestionHeader = document.getElementById('suggestionHeader');
-var body = document.getElementsByTagName('body')[0];
-
 //Button listener for copy name button
 copyName.addEventListener("click", function() {
-    //Show button has been clicked by changing appearance slightly
-    copyName.style.backgroundColor = "#ff3340";
     //Copy band name to clipboard
     copyTextToClipboard(suggestion.innerHTML);
-    //After brief delay, reset button to default style
-    window.setTimeout(resetButton, 100);
+
+    resetButton(copyName);
 });
 
-//Get width of the two longest elements
-var suggestionWidth = suggestion.clientWidth;
-var suggestionHeaderWidth = suggestionHeader.clientWidth;
-var copyNameWidth = copyName.clientWidth;
+//Button listener for copy name button
+refreshName.addEventListener("click", function() {
+    //Generate new band name for the popout and adjust content sizes
+    newBandName();
 
-//Debugging
-console.log("suggestion Width: " + suggestionWidth);
-console.log("suggestionHeader Width: " + suggestionHeaderWidth);
-console.log("copyName Width: " + copyNameWidth);
-
-//Determine width of the longest of the three elements on the popup
-var newWidth = Math.max(Math.max(suggestionWidth, copyNameWidth), suggestionHeaderWidth);
-
-//Also Debugging
-console.log("newWidth: " + newWidth);
-console.log("Pre reset: " + body.style.width);
-
-//Update body size to max width of elements
-body.style.width = newWidth + "px";
-
-//Still Debugging
-console.log("Post reset: " + body.style.width);
+    resetButton(refreshName);
+});

@@ -26,7 +26,6 @@ From there, click the "details" option for this extension and scroll down to "Ex
 Use this page to input addition URLs you want this extension to open on. You can also clear this list of URLs and start over. Any action you make on this page is stored away immediately, so don't worry about losing changes made if you close the page!
 
 ### Planned features (if they haven't already been added and I've forgotten to update this line):
-1. Adjust the popup window size to better fit the text width
-2. New name button on popup window to quickly get a new random name
-3. Spruce up url adding page
-4. Conversion to either enabling popup for all sites or opening popup automatically for specified sites (depending on possibility of second option)
+1. Spruce up url adding page
+2. Conversion to either enabling popup for all sites or opening popup automatically for specified sites (depending on possibility of second option)
+3. Option for random adjective-noun pairing, rather than predetermined "good ones"

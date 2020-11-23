@@ -1,7 +1,7 @@
 # BandNames
 BandNames is a Chrome extension that targets sites like Discord where changing your username frequently is a natural habit.
 
-When arriving at a site you've determine worthy of your creative genius, this extension can be clicked to view a randomly selected band name that will surely get you a lot of attention.
+When arriving at a site you've determine worthy of your creative genius, this extension can be clicked to view a randomly selected band name that will surely get you a lot of attention one way or another.
 
 You can easily copy this name to your clipboard by clicking the button on the popup or close the promp and reopen it for a different name.
 

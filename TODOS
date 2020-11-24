@@ -3,3 +3,10 @@ Get event to register in background.js
 - Click on user settings, edit name, input new name to the blank, type password
 - Username and password have to be known, possibly put in another JSON file
 - Exit back to discord at the end
+In this case, remove urlListen.js
+
+Alternative: 
+- Set urlListen to bring to foreground (.focus() does nothing currently)
+- Set window to fixed size.
+    - If popup opened by window.open(), keep size constant and align everything to the left
+    - If popup opened in browser by showAction, keep current realignments

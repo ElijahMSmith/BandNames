@@ -25,3 +25,5 @@ chrome.tabs.executeScript({
     file: 'openDiscordUsernameChange.js'
 });
 //Has access to same DOM, so run code clicking the above buttons
+
+URL SELECTION NOT WORKING - RULES 

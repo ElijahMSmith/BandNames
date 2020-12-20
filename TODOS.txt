@@ -26,4 +26,4 @@ chrome.tabs.executeScript({
 });
 //Has access to same DOM, so run code clicking the above buttons
 
-URL SELECTION NOT WORKING - RULES 
+Change so popup occurs automatically on specified sites, but still openable on any website

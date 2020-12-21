@@ -1,6 +1,7 @@
 //Get all the elements we interact with
 let urlInput = document.getElementById('urlInput');
 let addUrlButton = document.getElementById('addUrlButton');
+let deleteUrlButton = document.getElementById('deleteUrlButton');
 let urlsDiv = document.getElementById('enabledUrls');
 let clearButton = document.getElementById('clearButton');
 let urlsList = []; //Initialize empty urls array
@@ -40,30 +41,9 @@ function printFromStorage(){
 
 //Checks thorugh urlsList to verify if url has already been incorporated to list, returning true if it is found
 function alreadyHaveUrl(url){
-    for(var i = 0; i < urlsList.length; i++){
-        if(urlsList[i] === url)
-            return true;
-    }
+    if(urlsList.indexOf(url) != -1)
+        return true;
     return false;
-}
-
-//Update rules for websites that activate the extension
-function addRules(){
-    console.log("Getting storage contents before setting rules");
-    printFromStorage();
-
-    let newConditions = [];
-    for(var current of urlsList)
-        newConditions.push(new chrome.declarativeContent.PageStateMatcher({pageUrl: {hostEquals: current},}));
-
-    chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
-        chrome.declarativeContent.onPageChanged.addRules([{
-            conditions: newConditions,
-            actions: [
-                new chrome.declarativeContent.ShowPageAction()
-            ]
-        }]);
-    });
 }
 
 //Click listener to add button
@@ -88,21 +68,45 @@ addUrlButton.addEventListener("click", function(){
 
     //Reinsert all urls to storage, log to console success
     chrome.storage.sync.set({allUrls: urlsList}, function(){
-        console.log("Updated stored URLs");
+        console.log("Updated stored URLs (added " + newUrlText + ")");
     });
 
-    addRules(); //Update urls that trigger popup
+    chrome.runtime.sendMessage({takeAction: "add", targetUrl: newUrlText}, function(response){
+        console.log(response == true ? "Successfully processed URL addition" : "URL addition failed");
+    });
+
+    urlInput.value = "";
 });
 
-//Executes the add url process via clicking on the button when user presses the enter key
-urlInput.addEventListener("keyup", function(event) {
-    //Number 13 is the "Enter" key on the keyboard
-    if (event.keyCode === 13) {
-        //Cancel the default action
-        event.preventDefault();
-        //Trigger the button element with a click
-        addUrlButton.click();
+//Click listener to add button
+deleteUrlButton.addEventListener("click", function(){
+    //Get input text
+    var newUrlText = urlInput.value.toLowerCase();
+
+    //If no url matching the input text exists, can't do anything
+    if(!alreadyHaveUrl(newUrlText)){
+        alert("That URL is not in the list!");
+        return;
     }
+
+    //Remove this URL from the array
+    let index = urlsList.indexOf(newUrlText);
+    urlsList.splice(index, 1);
+
+    //Remove this URL from visible list
+    let urlItems = document.getElementsByClassName('urlItem');
+    urlItems[index].remove();
+
+    //Reinsert shortened url array to storage, log
+    chrome.storage.sync.set({allUrls: urlsList}, function(){
+        console.log("Updated stored URLs (removed " + newUrlText + ")");
+    });
+    
+    chrome.runtime.sendMessage({takeAction: "delete", targetUrl: newUrlText}, function(response){
+        console.log(response == true ? "Successfully processed URL deletion" : "URL deletion failed");
+    });
+
+    urlInput.value = "";
 });
 
 //Add listener to clear urls button
@@ -113,7 +117,32 @@ clearButton.addEventListener("click", function(){
         for(var i = urlItems.length - 1; i >= 0; i--){
             urlItems[i].remove();
         }
+        
+        //Flush urls array
+        urlsList = [];
     });
-    //Flush urls array
-    urlsList = [];
+
+    chrome.runtime.sendMessage({takeAction: "clear", targetUrl: ""}, function(response){
+        console.log(response == true ? "Successfully processed URL clearing" : "URL deletion clearing");
+    });
 })
+
+//Executes the add url process via clicking on the button when user presses the enter key
+urlInput.addEventListener("keyup", function(event) {
+    //Number 13 is the "Enter" key on the keyboard
+    if (event.keyCode === 13) {
+        //Cancel the default action
+        event.preventDefault();
+        //Trigger the button element with a click
+        addUrlButton.click();
+    }
+
+    //Number 46 is the "Delete" key on the keyboard
+    
+    if (event.keyCode === 46) {
+        //Cancel the default action
+        event.preventDefault();
+        //Trigger the button element with a click
+        deleteUrlButton.click();
+    }
+});

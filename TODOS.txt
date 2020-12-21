@@ -1,29 +1,11 @@
+Option to set maximum characters allowed when generating a name, all future names picked must be of that length or smaller
 
+Problem: We're loading and unloading so often, it MIGHT be rather inefficient to resort every time.
 
-- Click on user settings, edit name, input new name to the blank, type password
-- Username and password have to be known, possibly put in another JSON file
-- Exit back to discord at the end
-In this case, remove urlListen.js
+If we're just updating arrays, we can just addto a specific part of the datastructure in question
+- Should make a 2D array of the length of the maximum word. When loading words, add each one to the array at the index of its length
+- When asked to choose, default is no limit. If there is a limit, use max as the sum of the size of the groups with equal or fewer letters as limit
+- Generate random number, move down outer array until index appears in that group (subtract from this index each group size that can fit in the index)
+- Pick item from that group and display
 
-Alternative: 
-- Set window to fixed size.
-    - If popup opened by window.open(), keep size constant and align everything to the left
-    - If popup opened in browser by showAction, keep current realignments
-- Have window recognize all urls in storage, not just hard coded discord
-
-CONTENT SCRIPT WHEN COPY BUTTON CLICKED: COPY NAME, CLICK THESE TWO BUTTONS IN SUCCESSION
-
-//Settings button
-<button aria-label="User Settings" type="button" class="button-14-BFJ enabled-2cQ-u7 button-38aScr lookBlank-3eh9lL colorBrand-3pXr91 grow-q77ONN"><div class="contents-18-Yxp"><svg aria-hidden="false" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M19.738 10H22V14H19.739C19.498 14.931 19.1 15.798 18.565 16.564L20 18L18 20L16.565 18.564C15.797 19.099 14.932 19.498 14 19.738V22H10V19.738C9.069 19.498 8.203 19.099 7.436 18.564L6 20L4 18L5.436 16.564C4.901 15.799 4.502 14.932 4.262 14H2V10H4.262C4.502 9.068 4.9 8.202 5.436 7.436L4 6L6 4L7.436 5.436C8.202 4.9 9.068 4.502 10 4.262V2H14V4.261C14.932 4.502 15.797 4.9 16.565 5.435L18 3.999L20 5.999L18.564 7.436C19.099 8.202 19.498 9.069 19.738 10ZM12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16Z"></path></svg></div></button>
-
-//Edit username button
-<button type="button" class="fieldButton-27bJrp button-38aScr lookFilled-1Gx00P colorGrey-2DXtkV sizeSmall-2cSMqn grow-q77ONN"><div class="contents-18-Yxp">Edit</div></button>
-
-//Can't find access to discord popup yet.
-
-chrome.tabs.executeScript({
-    file: 'openDiscordUsernameChange.js'
-});
-//Has access to same DOM, so run code clicking the above buttons
-
-Change so popup occurs automatically on specified sites, but still openable on any website
+Need to also account for limits <= 0, or limits short enough that we don't have a name to fit

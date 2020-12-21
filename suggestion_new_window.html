@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+    <head>
+        <style>
+            body {
+                background-color: #d4f9ff;
+            }
+
+            #suggestionHeader, #suggestion {
+                text-align: center;
+                font-weight: bold;
+            }
+
+            #suggestionHeader {
+                margin: auto;
+                display: block;
+            }
+
+            #suggestion {
+                margin: -5px auto auto auto;
+                display: block;
+            }
+
+            #copyName {
+                margin: 20px auto auto auto;
+            }
+
+            #refreshName {
+                margin: 5px auto auto auto;
+            }
+
+            button {
+                display: block;
+                width: 130px;
+                text-align: center;
+                background-color: #ff737c;
+                color: #ffffff;
+            }
+        </style>
+    </head>
+    <body>
+        <h3 id="suggestionHeader">Suggested Username:</p>
+        <h1 id="suggestion">PLACEHOLDER</h1>
+        <button id="copyName">Copy to Clipboard</button>
+        <button id="refreshName">Refresh Name</button>
+        <script src="loadSuggestion.js"></script>
+    </body>
+</html>

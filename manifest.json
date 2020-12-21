@@ -1,15 +1,14 @@
 {
     "name": "Band Name Suggestions",
     "version": "1.0",
-    "description": "Suggests possible band names as your Discord username!",
+    "description": "Find a quick and hilarious new username for sites like Discord and Kahoot!",
     "manifest_version": 2,
     "permissions": ["declarativeContent", "clipboardRead", "clipboardWrite", "storage", "webNavigation", "tabs", "activeTab"],
     "background": {
-        "scripts": ["installScripts.js",
-                    "urlListen.js"],
+        "scripts": ["urlListen.js"],
         "persistent": false
     },
-    "page_action": {
+    "browser_action": {
         "default_popup": "suggestion_popup.html",
         "default_icon": {
           "16": "images/BandNames_16.png",

@@ -3,9 +3,11 @@ var suggestion = document.getElementById('suggestion');
 var copyName = document.getElementById('copyName');
 var refreshName = document.getElementById('refreshName');
 var suggestionHeader = document.getElementById('suggestionHeader');
+var maxCharInput = document.getElementById('maxCharInput');
 var body = document.getElementsByTagName('body')[0];
 
 var bandNames = []; //Ever growing list of good band names
+var maxNameLength = 10;
 
 //Reset button to default color
 function resetButton(button){
@@ -96,6 +98,14 @@ async function loadNameData() {
 
     response.json().then(data => {
         bandNames = data.allNames;
+
+        for(currentName of bandNames){
+            //TODO: Sort into corrent index of array here
+            let noSpaces = currentName.replace(" ", "");
+            maxNameLength = maxNameLength > noSpaces.length ? maxNameLength : noSpaces.length;
+        }
+        
+        console.log(maxNameLength);
         newBandName();
     });
 }

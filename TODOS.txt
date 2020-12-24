@@ -9,3 +9,14 @@ If we're just updating arrays, we can just addto a specific part of the datastru
 - Pick item from that group and display
 
 Need to also account for limits <= 0, or limits short enough that we don't have a name to fit
+
+Current work:
+- Input set up and properly fit
+- Set default value for input when loading words
+- when we call to get a name, check the input. If it's valid, make that the new variable value
+    - If it's not valid, replace with whatever is in the variable
+
+- On load, sort each based on character length (without spaces, but put value WITH spaces into correct slot
+- Implement math for picking
+
+Try: Discord change nickname on specific server only

@@ -8,16 +8,15 @@
             #suggestionHeader, #suggestion {
                 text-align: center;
                 font-weight: bold;
+                display: block;
             }
 
             #suggestionHeader {
                 margin: auto;
-                display: block;
             }
 
             #suggestion {
-                margin: -5px auto auto auto;
-                display: block;
+                margin: 10px auto auto auto;
             }
 
             #copyName {
@@ -35,13 +34,40 @@
                 background-color: #ff737c;
                 color: #ffffff;
             }
+
+            div {
+                display: block;
+                margin: auto;
+                text-align: center;
+            }
+
+            p, input {
+                display: inline-block;
+                text-align: center;
+            }
+
+            #maxCharLabel {
+                font-weight: bold;
+            }
+
+            #maxCharInput {
+                width: 30px;
+            }
         </style>
     </head>
     <body>
+
+        <!-- I wonder if there is a way to use this same html and link to a different css page dynamically from the js that creates it? -->
         <h3 id="suggestionHeader">Suggested Username:</p>
         <h1 id="suggestion">PLACEHOLDER</h1>
         <button id="copyName">Copy to Clipboard</button>
         <button id="refreshName">Refresh Name</button>
+
+        <div id="maxCharHolder">
+            <p id="maxCharLabel">Max Characters: </p>
+            <input id="maxCharInput" type="text" pattern="\d*" maxlength="2"></input>
+        </div>
+
         <script src="loadSuggestion.js"></script>
     </body>
 </html>

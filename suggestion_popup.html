@@ -7,11 +7,6 @@
                 background-color: #d4f9ff;
             }
 
-            #suggestionHeader, #suggestion {
-                text-align: center;
-                font-weight: bold;
-            }
-
             #suggestionHeader {
                 margin-top: -22px;
                 margin-bottom: 0px;
@@ -19,8 +14,12 @@
             }
 
             #suggestion {
-                margin-top: -5px;
+                margin-top: 5px;
                 display: block;
+            }
+
+            #copyName {
+                margin-top: 0px;
             }
 
             button {
@@ -31,6 +30,25 @@
                 color: #ffffff;
                 margin-top: 5px;
             }
+
+            div {
+                display: block;
+                margin: auto;
+                text-align: center;
+            }
+
+            p, input {
+                display: inline-block;
+                text-align: center;
+            }
+
+            #maxCharLabel {
+                font-weight: bold;
+            }
+
+            #maxCharInput {
+                width: 30px;
+            }
         </style>
     </head>
     <body>
@@ -38,6 +56,12 @@
         <h1 id="suggestion">PLACEHOLDER</h1>
         <button id="copyName">Copy to Clipboard</button>
         <button id="refreshName">Refresh Name</button>
+        
+        <div id="maxCharHolder">
+            <p id="maxCharLabel">Max Characters: </p>
+            <input id="maxCharInput" type="text" pattern="\d*" maxlength="2"></input>
+        </div>
+
         <script src="loadSuggestion.js"></script>
     </body>
 </html>

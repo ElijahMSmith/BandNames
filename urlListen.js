@@ -67,6 +67,7 @@ chrome.runtime.onMessage.addListener((requestJSON, sender, sendResponse) => {
 
 //Set default url to discord.com when installed for the first time
 chrome.runtime.onInstalled.addListener(function(){
+    console.log("install");
     //First set this url in storage
     chrome.storage.sync.set({allUrls: ["discord.com"]}, function(){
         console.log("Stored discord.com as the default site for this popup to be enabled. You can remove this site at any time in the options page.");
@@ -79,7 +80,8 @@ chrome.runtime.onInstalled.addListener(function(){
     });
 });
 
-chrome.runtime.onStartup.addListener(function(){
+/*chrome.runtime.onStartup.addListener(function(){
+    console.log("startup");
     //Get all current urls in storage and add them to the list
     chrome.storage.sync.get({allUrls: []}, function(result){
         //Holds all URLs we are watching for the popup to trigger
@@ -93,4 +95,4 @@ chrome.runtime.onStartup.addListener(function(){
         //Now add the listener for all the urls we found 
         loadUrlListener();
     });
-});
+});*/

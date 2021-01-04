@@ -20,3 +20,9 @@ Current work:
 - Implement math for picking
 
 Try: Discord change nickname on specific server only
+
+
+
+Startup doesn't seem to run, leaving array empty and no rules, even though storage is full and options picks up on them
+
+When downloads are finished, get back to this issue.

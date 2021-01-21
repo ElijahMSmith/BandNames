@@ -11,18 +11,12 @@ If we're just updating arrays, we can just addto a specific part of the datastru
 Need to also account for limits <= 0, or limits short enough that we don't have a name to fit
 
 Current work:
-- Input set up and properly fit
-- Set default value for input when loading words
-- when we call to get a name, check the input. If it's valid, make that the new variable value
-    - If it's not valid, replace with whatever is in the variable
+- Set blank default to be the length of the longest retrieved word
+- When we call to get a name, check the input. If it's valid, make that the new variable value and query a random name or equal or lesser length
+    - If it's not valid, replace with the largest value and query any name
 
-- On load, sort each based on character length (without spaces, but put value WITH spaces into correct slot
+- On load, sort into 2D array based on character length (without spaces, but put value WITH spaces into correct slot)
+    - Need to keep running length of a row. At the end, should create an array that keeps all previous slot and current slot name counts, cumulative
 - Implement math for picking
 
 Try: Discord change nickname on specific server only
-
-
-
-Startup doesn't seem to run, leaving array empty and no rules, even though storage is full and options picks up on them
-
-When downloads are finished, get back to this issue.

@@ -1,17 +1,19 @@
-//------------------ Procedural Section ------------------
+//------------------ Setup Section ------------------
+
 //Global url array so we don't have to reload every update
 var popupUrls = [];
 
 //Opens popup when listener called
 var urlListener = () => {
-    var newWindow = window.open("suggestion_new_window.html", "BandNames", "width=350,height=240,status=no,scrollbars=yes,resizable=no");
+    var newWindow = window.open("suggestion_new_window.html", "BandNames", "width=350,height=240,status=0,scrollbars=1,resizable=0");
     window.blur();
     newWindow.focus();
 };
 
+//---------------- Function Section ----------------
+
 //Remove and reapply urlListener with updated array
-function loadUrlListener(){
-    //Remove listener with old url list
+function reloadUrlListener(){
     chrome.webNavigation.onCompleted.removeListener(urlListener);
 
     //Set new listener with updated url list
@@ -20,8 +22,43 @@ function loadUrlListener(){
     if(popupUrls.length > 0)
         chrome.webNavigation.onCompleted.addListener(urlListener, {url: popupUrls});
 
-    console.log("Added listener for " + popupUrls.length + " urls");
+    //Remove listener with old url list
+    console.log("Added listener for " + popupUrls.length + " urls:");
+    console.log(popupUrls);
 }
+
+//---------------- Procedural Section ----------------
+
+//Every time an event this script listens to triggers the script to perform an action, this function is run. 
+//This way, we can repopulate the array after the browser restarts and as such, popupUrls is cleared,
+    //When we next navigate to a URL recognized by urlListener the last time it was applied.
+chrome.storage.sync.get({allUrls: []}, function(result){
+    console.log("Updating URL set");
+
+    //Reinsert all urls to storage, log to console success
+    //Get urls array from allUrls key
+    var urlsArray = result.allUrls;
+
+    if(urlsArray.length == 0){
+        console.log("install");
+
+        //First set this url in storage
+        chrome.storage.sync.set({allUrls: ["discord.com"]}, function(){
+            console.log("Stored discord.com as the default site for this popup to be enabled. You can remove this site at any time in the options page.");
+        });
+
+        //Set default to discord
+        urlsArray.push("discord.com");
+    }
+
+    //For each url string
+    for(var i = 0; i < urlsArray.length; i++){
+        //Create new p element and append to urlsDiv
+        popupUrls.push({hostContains: urlsArray[i]});
+    }
+
+    reloadUrlListener();
+});
 
 //------------------ Message Listener ------------------
 
@@ -56,43 +93,6 @@ chrome.runtime.onMessage.addListener((requestJSON, sender, sendResponse) => {
         sendResponse(false);
     }
 
-    loadUrlListener();
-
-    //Mark successes
-    console.log(popupUrls);
-    sendResponse(true);
+    reloadUrlListener();
+    sendResponse(true); //Mark success
 });
-
-//------------------- Runtime Listeners -------------------
-
-//Set default url to discord.com when installed for the first time
-chrome.runtime.onInstalled.addListener(function(){
-    console.log("install");
-    //First set this url in storage
-    chrome.storage.sync.set({allUrls: ["discord.com"]}, function(){
-        console.log("Stored discord.com as the default site for this popup to be enabled. You can remove this site at any time in the options page.");
-
-        //Also start the array storage
-        popupUrls.push({hostContains: "discord.com"});
-
-        //Now add the listener for this url
-        loadUrlListener();
-    });
-});
-
-/*chrome.runtime.onStartup.addListener(function(){
-    console.log("startup");
-    //Get all current urls in storage and add them to the list
-    chrome.storage.sync.get({allUrls: []}, function(result){
-        //Holds all URLs we are watching for the popup to trigger
-
-        for(url of result.allUrls){
-            popupUrls.push({hostContains: url});
-        }
-
-        console.log(popupUrls);
-
-        //Now add the listener for all the urls we found 
-        loadUrlListener();
-    });
-});*/

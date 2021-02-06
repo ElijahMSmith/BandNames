@@ -20,3 +20,5 @@ Current work:
 - Implement math for picking
 
 Try: Discord change nickname on specific server only
+
+BUG: Discord (probably just because it's the first url) doesn't load into array and listener until one of the other sites is navigated to and triggers popup first

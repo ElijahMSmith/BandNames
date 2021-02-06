@@ -6,9 +6,20 @@ var suggestionHeader = document.getElementById('suggestionHeader');
 var maxCharInput = document.getElementById('maxCharInput');
 var body = document.getElementsByTagName('body')[0];
 
+var maxStoredLength = 0; //Longest word we have
+var minStoredLength = 30;
 var bandNames = []; //Ever growing list of good band names
-var maxNameLength = 10;
-var maxStoredLength = -1;
+for(var i = 0; i <= 30; i++)
+    bandNames[i] = [];
+
+/*
+
+OPTION 2: Simple frequency catcher
+- Generate random number less than or equal to maxNameLength until we have an array initialized
+- Go to that index, generate random number less than length of array at that index, pick that element
+- Doesn't actually need a frequency array since you can just do length of inner array
+
+*/
 
 //Reset button to default color
 function resetButton(button){
@@ -50,7 +61,33 @@ function copyTextToClipboard(text) {
 
 function newBandName(){
     //Pick new name and set new text
-    suggestion.innerText = bandNames[Math.floor(Math.random() * bandNames.length)];
+    var maxInput = String(maxCharInput.value);
+    var numberRegex = /^[0-9]?[0-9]?$/g;
+
+    if(maxInput.match(numberRegex) == null){
+        maxCharInput.value = maxStoredLength;
+        maxInput = maxCharInput.value;
+    }
+    
+    //Pick random outer array with equal or less index
+    //Pick again if that array doesn't exist (no loaded names of that size)
+    var maxSelection = parseInt(maxInput);
+    if(maxSelection < minStoredLength){
+        maxSelection = minStoredLength;
+        maxCharInput.value = minStoredLength;
+    } else if(maxSelection > maxStoredLength){
+        maxSelection = maxStoredLength;
+        maxCharInput.value = maxStoredLength;
+    }
+
+    //TODO: Fix generating same name twice in a row
+    var random = Math.floor(Math.random() * (maxSelection - minStoredLength + 1)) + minStoredLength;
+    while(bandNames[random].length == 0){
+        random = Math.floor(Math.random() * (maxSelection - minStoredLength + 1)) + minStoredLength;
+    }
+
+    //Pick a random element from inner array
+    suggestion.innerText = bandNames[random][Math.floor(Math.random() * bandNames[random].length)];
 
     //After we let element attributes update, update box size to match size of the band name
     setTimeout(function(){
@@ -94,17 +131,23 @@ async function loadNameData() {
     if (response.status !== 200){
         console.log('Looks like there was a problem. Status Code: ' +
         response.status);
-        return bandNames;
     }
 
     response.json().then(data => {
-        bandNames = data.allNames;
+        var loadedNames = data.allNames;
 
-        for(currentName of bandNames){
+        for(currentName of loadedNames){
             //TODO: Sort into corrent index of array here
             let noSpaces = currentName.replace(" ", "").length;
             maxStoredLength = maxStoredLength > noSpaces ? maxStoredLength : noSpaces;
+            minStoredLength = minStoredLength < noSpaces ? minStoredLength : noSpaces;
+
+            //Push this name onto existing array
+            bandNames[noSpaces].push(currentName);
         }
+
+        maxCharInput.value = maxStoredLength;
+
         newBandName();
     });
 }

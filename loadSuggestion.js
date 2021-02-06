@@ -12,6 +12,9 @@ var bandNames = []; //Ever growing list of good band names
 for(var i = 0; i <= 30; i++)
     bandNames[i] = [];
 
+var lastOuterIndex = -1;
+var lastInnerIndex = -1;
+
 /*
 
 OPTION 2: Simple frequency catcher
@@ -80,14 +83,28 @@ function newBandName(){
         maxCharInput.value = maxStoredLength;
     }
 
-    //TODO: Fix generating same name twice in a row
-    var random = Math.floor(Math.random() * (maxSelection - minStoredLength + 1)) + minStoredLength;
-    while(bandNames[random].length == 0){
-        random = Math.floor(Math.random() * (maxSelection - minStoredLength + 1)) + minStoredLength;
+    var outerIndex = lastOuterIndex;
+    var innerIndex = lastInnerIndex;
+
+    //If we generate same name as last time, try again until we pick a different name
+    //Usually only matters with small lengths where limited names are available to pick
+    while(lastOuterIndex == outerIndex && lastInnerIndex == innerIndex){
+        //Pick an index with a non-empty array
+        outerIndex = Math.floor(Math.random() * (maxSelection - minStoredLength + 1)) + minStoredLength;
+        while(bandNames[outerIndex].length == 0){
+            outerIndex = Math.floor(Math.random() * (maxSelection - minStoredLength + 1)) + minStoredLength;
+        }
+
+        //Pick a random name from that array
+        innerIndex = Math.floor(Math.random() * bandNames[outerIndex].length);
     }
 
-    //Pick a random element from inner array
-    suggestion.innerText = bandNames[random][Math.floor(Math.random() * bandNames[random].length)];
+    //Pick the name and update suggestion text
+    suggestion.innerText = bandNames[outerIndex][innerIndex];
+    
+    //Update previous indexes to current selection
+    lastOuterIndex = outerIndex;
+    lastInnerIndex = innerIndex;
 
     //After we let element attributes update, update box size to match size of the band name
     setTimeout(function(){
@@ -137,17 +154,17 @@ async function loadNameData() {
         var loadedNames = data.allNames;
 
         for(currentName of loadedNames){
-            //TODO: Sort into corrent index of array here
+            //Get number of characters in name, update global min/max
             let noSpaces = currentName.replace(" ", "").length;
             maxStoredLength = maxStoredLength > noSpaces ? maxStoredLength : noSpaces;
             minStoredLength = minStoredLength < noSpaces ? minStoredLength : noSpaces;
 
-            //Push this name onto existing array
+            //Push this name onto array at correct index (the number of characters of the string)
             bandNames[noSpaces].push(currentName);
         }
 
+        //Set input to be our found max, then load up first band name
         maxCharInput.value = maxStoredLength;
-
         newBandName();
     });
 }

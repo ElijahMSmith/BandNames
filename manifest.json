@@ -3,7 +3,7 @@
     "version": "1.0",
     "description": "Find a quick and hilarious new username for sites like Discord and Kahoot!",
     "manifest_version": 2,
-    "permissions": ["declarativeContent", "clipboardRead", "clipboardWrite", "storage", "webNavigation", "tabs", "activeTab"],
+    "permissions": ["declarativeContent", "clipboardRead", "clipboardWrite", "storage", "webNavigation", "tabs", "activeTab", "*://*/*"],
     "background": {
         "scripts": ["urlListen.js"],
         "persistent": false

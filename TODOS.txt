@@ -1,24 +1,2 @@
-Option to set maximum characters allowed when generating a name, all future names picked must be of that length or smaller
-
-Problem: We're loading and unloading so often, it MIGHT be rather inefficient to resort every time.
-
-If we're just updating arrays, we can just addto a specific part of the datastructure in question
-- Should make a 2D array of the length of the maximum word. When loading words, add each one to the array at the index of its length
-- When asked to choose, default is no limit. If there is a limit, use max as the sum of the size of the groups with equal or fewer letters as limit
-- Generate random number, move down outer array until index appears in that group (subtract from this index each group size that can fit in the index)
-- Pick item from that group and display
-
-Need to also account for limits <= 0, or limits short enough that we don't have a name to fit
-
-Current work:
-- Set blank default to be the length of the longest retrieved word
-- When we call to get a name, check the input. If it's valid, make that the new variable value and query a random name or equal or lesser length
-    - If it's not valid, replace with the largest value and query any name
-
-- On load, sort into 2D array based on character length (without spaces, but put value WITH spaces into correct slot)
-    - Need to keep running length of a row. At the end, should create an array that keeps all previous slot and current slot name counts, cumulative
-- Implement math for picking
-
-Try: Discord change nickname on specific server only
-
-BUG: Discord (probably just because it's the first url) doesn't load into array and listener until one of the other sites is navigated to and triggers popup first
+TODOS: 
+- Instead of doing two random choices, instead do one random choice over the whole subset of names with MAX or less characters

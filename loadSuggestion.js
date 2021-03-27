@@ -177,10 +177,6 @@ copyName.addEventListener("click", function() {
     copyTextToClipboard(suggestion.innerHTML);
 
     resetButton(copyName);
-
-    chrome.tabs.executeScript({
-        file: 'openDiscordUsernameChange.js'
-    });
 });
 
 //Button listener for copy name button

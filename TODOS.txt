@@ -1,2 +1,6 @@
 TODOS: 
-- Instead of doing two random choices, instead do one random choice over the whole subset of names with MAX or less characters
+- Refactor picking to equally balaqnce all names
+    - Freq array that gets incremented in one spot as words loaded, then gets accumulated 0->end by adding previous index
+- Slot to add custom names
+    - Save to a new file - need to be consistent when updating to a new version, so it shouldn't get overwritten on a new version.
+    - Can also ask it to download a copy/export or load from a text file

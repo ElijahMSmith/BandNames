@@ -25,7 +25,12 @@ From there, click the "details" option for this extension and scroll down to "Ex
 
 Use this page to input addition URLs you want this extension to open on. You can also clear this list of URLs and start over. Any action you make on this page is stored away immediately, so don't worry about losing changes made if you close the page!
 
-### Planned features (if they haven't already been added and I've forgotten to update this line):
-1. Character limit for generated words (for those frustrating times where your good name is too long)
-2. Option for random adjective-noun pairing, rather than predetermined "good ones"
-3. Spruce up url adding page
+## Recent Changes
+
+- Updated the picking algorithm to equally balance all names. The previous algorithm picked a random length of name, then randomly picked one name of that length, causing names with less-common lengths to appear more frequently.
+- Lots of new names!
+
+### Future Changes
+
+- Allow for custom names to be added and export your current list of names
+- Allow for in-popup generation of new names

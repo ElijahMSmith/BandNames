@@ -8,21 +8,11 @@ var body = document.getElementsByTagName('body')[0];
 
 var maxStoredLength = 0; //Longest word we have
 var minStoredLength = 30;
+
 var bandNames = []; //Ever growing list of good band names
-for(var i = 0; i <= 30; i++)
-    bandNames[i] = [];
+var cumFreq = [];
 
-var lastOuterIndex = -1;
-var lastInnerIndex = -1;
-
-/*
-
-OPTION 2: Simple frequency catcher
-- Generate random number less than or equal to maxNameLength until we have an array initialized
-- Go to that index, generate random number less than length of array at that index, pick that element
-- Doesn't actually need a frequency array since you can just do length of inner array
-
-*/
+var lastGeneration = -1;
 
 //Reset button to default color
 function resetButton(button){
@@ -67,13 +57,12 @@ function newBandName(){
     var maxInput = String(maxCharInput.value);
     var numberRegex = /^[0-9]?[0-9]?$/g;
 
-    if(maxInput.match(numberRegex) == null){
+    if(maxInput.match(numberRegex) === null){
         maxCharInput.value = maxStoredLength;
         maxInput = maxCharInput.value;
     }
     
-    //Pick random outer array with equal or less index
-    //Pick again if that array doesn't exist (no loaded names of that size)
+    //Parse that value into an integer, replacing it if out of bounds with the correct bound
     var maxSelection = parseInt(maxInput);
     if(maxSelection < minStoredLength){
         maxSelection = minStoredLength;
@@ -83,28 +72,33 @@ function newBandName(){
         maxCharInput.value = maxStoredLength;
     }
 
-    var outerIndex = lastOuterIndex;
-    var innerIndex = lastInnerIndex;
+    //The number of names with length less than or equal to maxSelection
+    const maxGeneration = cumFreq[maxSelection];
 
-    //If we generate same name as last time, try again until we pick a different name
-    //Usually only matters with small lengths where limited names are available to pick
-    while(lastOuterIndex == outerIndex && lastInnerIndex == innerIndex){
-        //Pick an index with a non-empty array
-        outerIndex = Math.floor(Math.random() * (maxSelection - minStoredLength + 1)) + minStoredLength;
-        while(bandNames[outerIndex].length == 0){
-            outerIndex = Math.floor(Math.random() * (maxSelection - minStoredLength + 1)) + minStoredLength;
-        }
-
-        //Pick a random name from that array
-        innerIndex = Math.floor(Math.random() * bandNames[outerIndex].length);
+    //If we don't have any names to pick from, we did something wrong
+    if(maxGeneration === 0){
+        console.error("ERROR: No names loaded to pick from.")
+        return;
     }
 
+    //Generate a random value 0 -> maxGeneration (exclusive)
+    let generated = Math.floor(Math.random() * maxGeneration);
+
+    //Don't generate the same name two times in a row, unless there are no other names to generate
+    if(maxGeneration > 1){
+        while(generated === lastGeneration)
+            generated = Math.floor(Math.random() * maxGeneration);
+    }
+
+    //Move to the correct outer array index where the name in the full list that corresponds to the generated index lies
+    let outerIndex = 0;
+    while(generated >= cumFreq[outerIndex]) outerIndex++;
+
+    //Pick the corrent name corresponding to the generated index (generated - previous cumFreq value)
+    const innerIndex = generated - (cumFreq[outerIndex - 1] !== undefined ? cumFreq[outerIndex - 1] : 0);
+    
     //Pick the name and update suggestion text
     suggestion.innerText = bandNames[outerIndex][innerIndex];
-    
-    //Update previous indexes to current selection
-    lastOuterIndex = outerIndex;
-    lastInnerIndex = innerIndex;
 
     //After we let element attributes update, update box size to match size of the band name
     setTimeout(function(){
@@ -135,6 +129,8 @@ function newBandName(){
 
         //Center in box
         suggestion.style.display = "block";
+
+        lastGeneration = generated;
     }, 1);
 }
 
@@ -159,17 +155,52 @@ async function loadNameData() {
             maxStoredLength = maxStoredLength > noSpaces ? maxStoredLength : noSpaces;
             minStoredLength = minStoredLength < noSpaces ? minStoredLength : noSpaces;
 
+            //Push any required new arrays onto the end so that we have an array at the required index
+            while(bandNames[noSpaces] === undefined)
+                bandNames.push([]);
+            
             //Push this name onto array at correct index (the number of characters of the string)
             bandNames[noSpaces].push(currentName);
+
+            //Add one to the index in cumFreq that this array corresponds to
+            const curFreq = cumFreq[noSpaces];
+            cumFreq[noSpaces] = curFreq === undefined ? 1 : curFreq + 1;
+        }
+        
+        //Move through cumFreq and add previous slot so that our array holds how many names are the length of the index or shorter
+        for(let i = 0; i < cumFreq.length; i++){
+            const prev = cumFreq[i-1];
+            const curr = cumFreq[i];
+            cumFreq[i] = (prev !== undefined ? prev : 0) + (curr !== undefined ? curr : 0);
         }
 
         //Set input to be our found max, then load up first band name
         maxCharInput.value = maxStoredLength;
+
+        for(let i = 0; i < bandNames.length; i++){
+            let concat = ""
+            for(let j = 0; j < bandNames[i].length; j++){
+                concat += bandNames[i][j] + ", "
+            }
+            console.log(concat)
+        }
+
+        console.log()
+        console.log()
+
+        for(let i = 0; i < cumFreq.length; i++){
+            console.log(cumFreq[i])
+        }
+
+        console.log()
+        console.log()
+
+        console.log(bandNames.length)
+        console.log(cumFreq.length)
+
         newBandName();
     });
 }
-
-loadNameData(); //Call that function to load the band names
 
 //Button listener for copy name button
 copyName.addEventListener("click", function() {
@@ -186,3 +217,5 @@ refreshName.addEventListener("click", function() {
 
     resetButton(refreshName);
 });
+
+loadNameData(); //Call that function to load the band names

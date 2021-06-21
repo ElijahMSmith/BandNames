@@ -5,7 +5,7 @@ var popupUrls = [];
 
 //Opens popup when listener called
 var urlListener = () => {
-    var newWindow = window.open("suggestion_new_window.html", "BandNames", "width=350,height=240,status=0,scrollbars=1,resizable=0");
+    var newWindow = window.open("suggestion_new_window.html", "BandNames", "width=350,height=240,status=0,scrollbars=1");
     window.blur();
     newWindow.focus();
 };

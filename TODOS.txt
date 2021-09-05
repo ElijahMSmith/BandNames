@@ -2,6 +2,7 @@ TODOS:
 - Slot to add custom names
     - Save to a new file - need to be consistent when updating to a new version, so it shouldn't get overwritten on a new version.
     - Can also ask it to download a copy/export or load from a text file
+- Minimum name length
 
 
 
@@ -11,3 +12,17 @@ TODOS:
     - Need to be able to import and export
     - Also must keep the generated file of custom names (which loads with the rest of the band names into one big array to pick from)
         - When extension updates/reloads, that file shouldn't be replaced.
+
+
+
+Generation planning:
+- Each list gets loaded when the popup or popout is created, nouns and adjectives, to their own arrays
+    - Sort by length of the word
+- HTML should have a place for the name generated
+- Should be able to generated entirely new names, or the noun/adjective individually
+- Also needs a maximum length field
+
+- When generating both: Pick a noun at random, then adjective
+    - Noun should be no longer than (maxCharCount - minAdjectiveLength)
+    - Adjective should be chosen randomly from those no longer than (maxCharCount - chosenNounLength)
+- If regenerating either part or both, the next option should not contain either the same noun or adjective unless there is no other option for one or the either.

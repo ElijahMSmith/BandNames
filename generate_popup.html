@@ -2,38 +2,33 @@
     <head>
         <style>
             body {
-                background-color: #d4f9ff;
+                background-color: #d2bbff;
             }
 
-            #suggestionHeader, #suggestion {
+            #suggestionHeader {
+                margin-top: -22px;
+                margin-bottom: 0px;
+                display: inline-block;
                 text-align: center;
-                font-weight: bold;
-                display: block;
             }
-
 
             #suggestion {
-                margin: 10px auto auto auto;
+                margin-top: 5px;
+                display: block;
+                text-align: center;
             }
 
             #copyName {
-                margin: 20px auto auto auto;
-            }
-
-            #refreshName {
-                margin: 5px auto auto auto;
-            }
-
-            #generateRandomly {
-                margin: 5px auto auto auto;
+                margin-top: 0px;
             }
 
             button {
-                display: block;
-                width: 150px;
+                display: inline-block;
+                width: 130px;
                 text-align: center;
                 background-color: #ff737c;
                 color: #ffffff;
+                margin-top: 5px;
             }
 
             div {
@@ -47,24 +42,12 @@
                 text-align: center;
             }
 
-            .charHolder {
-                height: 25px;
-            }
-
-            #maxCharLabel, #minCharLabel {
+            #maxCharLabel {
                 font-weight: bold;
             }
 
-            #maxCharInput, #minCharInput {
+            #maxCharInput {
                 width: 30px;
-            }
-
-            #minCharHolder {
-                padding-top: 5px;
-            }
-
-            #maxCharHolder {
-                padding-bottom: 15px;
             }
         </style>
     </head>
@@ -73,13 +56,8 @@
         <h1 id="suggestion">PLACEHOLDER</h1>
         <button id="copyName">Copy to Clipboard</button>
         <button id="refreshName">Refresh Name</button>
-        <button id="generateRandomly">Generate Randomly</button>
         
-        <div id="minCharHolder" class="charHolder">
-            <p id="minCharLabel">Min Characters: </p>
-            <input id="minCharInput" type="text" pattern="\d*" maxlength="2"></input>
-        </div>
-        <div id="maxCharHolder" class="charHolder">
+        <div id="maxCharHolder">
             <p id="maxCharLabel">Max Characters: </p>
             <input id="maxCharInput" type="text" pattern="\d*" maxlength="2"></input>
         </div>

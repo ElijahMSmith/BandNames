@@ -2,7 +2,7 @@
     <head>
         <style>
             body {
-                height: 133px;
+                height: 150px;
                 width: 300px;
                 background-color: #d4f9ff;
             }
@@ -20,13 +20,9 @@
                 text-align: center;
             }
 
-            #copyName {
-                margin-top: 0px;
-            }
-
             button {
                 display: inline-block;
-                width: 130px;
+                width: 150px;
                 text-align: center;
                 background-color: #ff737c;
                 color: #ffffff;
@@ -44,13 +40,26 @@
                 text-align: center;
             }
 
-            #maxCharLabel {
+            .charHolder {
+                height: 25px;
+            }
+
+            #maxCharLabel, #minCharLabel {
                 font-weight: bold;
             }
 
-            #maxCharInput {
+            #maxCharInput, #minCharInput {
                 width: 30px;
             }
+
+            #minCharHolder {
+                padding-top: 5px;
+            }
+
+            #maxCharHolder {
+                padding-bottom: 15px;
+            }
+
         </style>
     </head>
     <body>
@@ -58,8 +67,13 @@
         <h1 id="suggestion">PLACEHOLDER</h1>
         <button id="copyName">Copy to Clipboard</button>
         <button id="refreshName">Refresh Name</button>
+        <button id="generateRandomly">Generate Randomly</button>
         
-        <div id="maxCharHolder">
+        <div id="minCharHolder" class="charHolder">
+            <p id="minCharLabel">Min Characters: </p>
+            <input id="minCharInput" type="text" pattern="\d*" maxlength="2"></input>
+        </div>
+        <div id="maxCharHolder" class="charHolder">
             <p id="maxCharLabel">Max Characters: </p>
             <input id="maxCharInput" type="text" pattern="\d*" maxlength="2"></input>
         </div>

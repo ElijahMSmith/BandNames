@@ -1,56 +1,10 @@
-// Get body tag, suggestion text/header, and copy/refresh buttons
-let suggestion = document.getElementById("suggestion")
-let refreshName = <HTMLButtonElement>document.getElementById("refreshName")
-let suggestionHeader = document.getElementById("suggestionHeader")
-let maxCharInput = <HTMLInputElement>document.getElementById("maxCharInput")
-let minCharInput = <HTMLInputElement>document.getElementById("minCharInput")
-let body = document.getElementsByTagName("body")[0]
+var maxStoredLength = 0 // Longest word we have
+var minStoredLength = 30
 
-let maxStoredLength = 0 // Longest word we have
-let minStoredLength = 30
+var bandNames: string[][] = [] // Ever growing list of good band names
+var cumFreq: number[] = []
 
-let bandNames: string[][] = [] // Ever growing list of good band names
-let cumFreq: number[] = []
-
-let lastGeneration = -1
-
-// Reset button to default color
-let resetButton = (button: HTMLButtonElement): void => {
-	// Show button has been clicked by changing appearance slightly
-	button.style.backgroundColor = "#ff3340"
-
-	// After brief delay, reset button to default style
-	setTimeout((): void => {
-		button.style.backgroundColor = "#ff737c"
-	}, 100)
-}
-
-// Copies text input (suggested band name) to clipboard
-let copyTextToClipboard = (text: string): void => {
-	// Create a text box field where we can insert text to.
-	let copyFrom: HTMLTextAreaElement = document.createElement("textarea")
-
-	// Set the text content to be the text you wished to copy.
-	copyFrom.textContent = text
-
-	// Append the text area field into the body as a child.
-	// "execCommand()" only works when there exists selected text, and the text is inside
-	// document.body (meaning the text is part of a valid rendered HTML element).
-	document.body.appendChild(copyFrom)
-
-	// Select all the text!
-	copyFrom.select()
-
-	// Execute command
-	document.execCommand("copy")
-
-	// De-select the text using blur().
-	copyFrom.blur()
-
-	// Remove the text box field from the document.body, so no other JavaScript nor
-	// other elements can get access to this.
-	document.body.removeChild(copyFrom)
-}
+var lastGeneration = -1
 
 let newBandName = (): void => {
 	// Pick new name and set new text
@@ -177,6 +131,7 @@ let newBandName = (): void => {
 
 // Get all band names from JSON file
 let loadNameData = async (): Promise<void> => {
+	console.log("test")
 	const response: Response | void = await fetch(
 		"../loads/PreGenerated.json"
 	).catch(function (error) {
@@ -233,6 +188,7 @@ let loadNameData = async (): Promise<void> => {
 		minCharInput.value = minStoredLength.toString()
 		newBandName()
 	})
+	console.log("Finished load")
 }
 
 // Button listener for copy name button

@@ -110,7 +110,7 @@ clearButton.addEventListener("click", () => {
 });
 // Executes the add url process via clicking on the button when user presses the enter key
 urlInput.addEventListener("keyup", (event) => {
-    if (event.code === 'Enter') {
+    if (event.code === "Enter") {
         // Cancel the default action
         event.preventDefault();
         // Trigger the button element with a click

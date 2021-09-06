@@ -1,44 +1,8 @@
-// Get body tag, suggestion text/header, and copy/refresh buttons
-let suggestion = document.getElementById("suggestion");
-let refreshName = document.getElementById("refreshName");
-let suggestionHeader = document.getElementById("suggestionHeader");
-let maxCharInput = document.getElementById("maxCharInput");
-let minCharInput = document.getElementById("minCharInput");
-let body = document.getElementsByTagName("body")[0];
-let maxStoredLength = 0; // Longest word we have
-let minStoredLength = 30;
-let bandNames = []; // Ever growing list of good band names
-let cumFreq = [];
-let lastGeneration = -1;
-// Reset button to default color
-let resetButton = (button) => {
-    // Show button has been clicked by changing appearance slightly
-    button.style.backgroundColor = "#ff3340";
-    // After brief delay, reset button to default style
-    setTimeout(() => {
-        button.style.backgroundColor = "#ff737c";
-    }, 100);
-};
-// Copies text input (suggested band name) to clipboard
-let copyTextToClipboard = (text) => {
-    // Create a text box field where we can insert text to.
-    let copyFrom = document.createElement("textarea");
-    // Set the text content to be the text you wished to copy.
-    copyFrom.textContent = text;
-    // Append the text area field into the body as a child.
-    // "execCommand()" only works when there exists selected text, and the text is inside
-    // document.body (meaning the text is part of a valid rendered HTML element).
-    document.body.appendChild(copyFrom);
-    // Select all the text!
-    copyFrom.select();
-    // Execute command
-    document.execCommand("copy");
-    // De-select the text using blur().
-    copyFrom.blur();
-    // Remove the text box field from the document.body, so no other JavaScript nor
-    // other elements can get access to this.
-    document.body.removeChild(copyFrom);
-};
+var maxStoredLength = 0; // Longest word we have
+var minStoredLength = 30;
+var bandNames = []; // Ever growing list of good band names
+var cumFreq = [];
+var lastGeneration = -1;
 let newBandName = () => {
     // Pick new name and set new text
     let maxInput = maxCharInput.value, minInput = minCharInput.value;
@@ -132,6 +96,7 @@ let newBandName = () => {
 };
 // Get all band names from JSON file
 let loadNameData = async () => {
+    console.log("test");
     const response = await fetch("../loads/PreGenerated.json").catch(function (error) {
         console.log("Fetch Error :-S", error);
         return;
@@ -176,6 +141,7 @@ let loadNameData = async () => {
         minCharInput.value = minStoredLength.toString();
         newBandName();
     });
+    console.log("Finished load");
 };
 // Button listener for copy name button
 refreshName.addEventListener("click", () => {

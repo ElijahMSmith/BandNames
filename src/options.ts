@@ -138,8 +138,7 @@ clearButton.addEventListener("click", (): void => {
 		let urlItems: HTMLCollectionOf<Element> =
 			document.getElementsByClassName("urlItem")
 
-		for (let i = urlItems.length - 1; i >= 0; i--)
-			urlItems[i].remove()
+		for (let i = urlItems.length - 1; i >= 0; i--) urlItems[i].remove()
 
 		// Flush urls array
 		urlsList = []
@@ -152,7 +151,7 @@ clearButton.addEventListener("click", (): void => {
 
 // Executes the add url process via clicking on the button when user presses the enter key
 urlInput.addEventListener("keyup", (event: KeyboardEvent): void => {
-	if (event.code === 'Enter') {
+	if (event.code === "Enter") {
 		// Cancel the default action
 		event.preventDefault()
 		// Trigger the button element with a click

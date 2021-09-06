@@ -4,7 +4,8 @@
 		"module": "commonjs",
 		"allowJs": true,
 		"watch": true,
-		"lib": ["dom", "es2021"]
+		"lib": ["dom", "es2021"],
+		"outDir": "./src/build/"
 	},
 	"types": ["chrome"],
 	"include": ["./src/*"]

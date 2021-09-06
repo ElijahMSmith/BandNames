@@ -1,12 +1,13 @@
+
 // ------------------ Setup Section ------------------
 
 // Global url array so we don't have to reload every update
-let popupUrls = []
+let popupUrls: chrome.events.UrlFilter[] = []
 
 // Opens popup when listener called
-let urlListener = () => {
-	let newWindow = window.open(
-		"suggestion_new_window.html",
+let urlListener = (): void => {
+	let newWindow: Window = window.open(
+		"./html/suggestionNewWindow.html",
 		"BandNames",
 		"width=500,height=330,status=0,scrollbars=1,resizable=no"
 	)
@@ -17,7 +18,7 @@ let urlListener = () => {
 // ---------------- Function Section ----------------
 
 // Remove and reapply urlListener with updated array
-function reloadUrlListener() {
+let reloadUrlListener= (): void => {
 	chrome.webNavigation.onCompleted.removeListener(urlListener)
 
 	// Set new listener with updated url list
@@ -32,6 +33,7 @@ function reloadUrlListener() {
 	console.log("Added listener for " + popupUrls.length + " urls:")
 	console.log(popupUrls)
 
+		// For easy validation after reloading in development
 	urlListener()
 }
 
@@ -40,18 +42,18 @@ function reloadUrlListener() {
 // Every time an event this script listens to triggers the script to perform an action, this function is run.
 // This way, we can repopulate the array after the browser restarts and as such, popupUrls is cleared,
 // When we next navigate to a URL recognized by urlListener the last time it was applied.
-chrome.storage.sync.get({ allUrls: [] }, function (result) {
+chrome.storage.sync.get({ allUrls: [] }, function (result): void {
 	console.log("Updating URL set")
 
 	// Reinsert all urls to storage, log to console success
 	// Get urls array from allUrls key
-	let urlsArray = result.allUrls
+	let urlsArray: string[] = result.allUrls
 
 	if (urlsArray.length == 0) {
 		console.log("install")
 
 		// First set this url in storage
-		chrome.storage.sync.set({ allUrls: ["discord.com"] }, function () {
+		chrome.storage.sync.set({ allUrls: ["discord.com"] }, function (): void {
 			console.log(
 				"Stored discord.com as the default site for this popup to be enabled. You can remove this site at any time in the options page."
 			)
@@ -74,8 +76,8 @@ chrome.storage.sync.get({ allUrls: [] }, function (result) {
 
 // Depending on the action to be taken, update the popupUrls list, then reset web listener
 // NOTE: This listener only updates the array locally. Storage changes are made options.js, which will be loaded automatically next startup
-chrome.runtime.onMessage.addListener((requestJSON, sender, sendResponse) => {
-	let url = requestJSON.targetUrl
+chrome.runtime.onMessage.addListener((requestJSON, sender, sendResponse): void => {
+	let url: string = requestJSON.targetUrl
 
 	if (requestJSON.takeAction === "add") {
 		// Add the new url to the list

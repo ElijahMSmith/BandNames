@@ -13,19 +13,11 @@
 
 
             #suggestion {
-                margin: 10px auto auto auto;
+                margin-top: 10px;
             }
 
             #copyName {
-                margin: 20px auto auto auto;
-            }
-
-            #refreshName {
-                margin: 5px auto auto auto;
-            }
-
-            #generateRandomly {
-                margin: 5px auto auto auto;
+                margin-top: 20px;
             }
 
             button {
@@ -34,6 +26,7 @@
                 text-align: center;
                 background-color: #ff737c;
                 color: #ffffff;
+                margin-top: 5px;
             }
 
             div {
@@ -73,7 +66,8 @@
         <h1 id="suggestion">PLACEHOLDER</h1>
         <button id="copyName">Copy to Clipboard</button>
         <button id="refreshName">Refresh Name</button>
-        <button id="generateRandomly">Generate Randomly</button>
+        <!-- When in random generation mode, this button will be updated with new text to swap back to pre-generated -->
+        <button id="switchMode">Generate Randomly</button>
         
         <div id="minCharHolder" class="charHolder">
             <p id="minCharLabel">Min Characters: </p>
@@ -84,6 +78,8 @@
             <input id="maxCharInput" type="text" pattern="\d*" maxlength="2"></input>
         </div>
 
-        <script src="loadSuggestion.js"></script>
+        <script src="../src/utility.js"></script>
+        <script src="../src/handlePregenerated.js"></script>
+        <script src="../src/handleRandomlyGenerated.js"></script>
     </body>
 </html>

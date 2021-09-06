@@ -26,3 +26,7 @@ Generation planning:
     - Noun should be no longer than (maxCharCount - minAdjectiveLength)
     - Adjective should be chosen randomly from those no longer than (maxCharCount - chosenNounLength)
 - If regenerating either part or both, the next option should not contain either the same noun or adjective unless there is no other option for one or the either.
+
+How do we swap views? Need to use same popup.
+- Make the JS for the other views in another attached script, make js files for each view and one for things that occur in each view
+- When swapping views, change stylings and whatever from general script

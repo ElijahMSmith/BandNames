@@ -1,15 +1,17 @@
+console.log("global test 2")
+
 // Get all the elements we interact with
-let urlInput: HTMLInputElement = <HTMLInputElement>(
+const urlInput: HTMLInputElement = <HTMLInputElement>(
 	document.getElementById("urlInput")
 )
-let addUrlButton: HTMLButtonElement = <HTMLButtonElement>(
+const addUrlButton: HTMLButtonElement = <HTMLButtonElement>(
 	document.getElementById("addUrlButton")
 )
-let deleteUrlButton: HTMLButtonElement = <HTMLButtonElement>(
+const deleteUrlButton: HTMLButtonElement = <HTMLButtonElement>(
 	document.getElementById("deleteUrlButton")
 )
-let urlsDiv: HTMLElement = document.getElementById("enabledUrls")
-let clearButton: HTMLButtonElement = <HTMLButtonElement>(
+const urlsDiv: HTMLElement = document.getElementById("enabledUrls")
+const clearButton: HTMLButtonElement = <HTMLButtonElement>(
 	document.getElementById("clearButton")
 )
 let urlsList: string[] = [] // Initialize empty urls array
@@ -22,7 +24,7 @@ window.onload = (): void => {
 	chrome.storage.sync.get({ allUrls: [] }, (result): void => {
 		// Reinsert all urls to storage, log to console success
 		// Get urls array from allUrls key
-		let urlsArray: string[] = result.allUrls
+		const urlsArray: string[] = result.allUrls
 		// For each url string
 		for (let i = 0; i < urlsArray.length; i++) {
 			// Create new p element and append to urlsDiv
@@ -36,11 +38,11 @@ window.onload = (): void => {
 }
 
 // For debugging
-let printFromStorage = (): void => {
+const printFromStorage = (): void => {
 	chrome.storage.sync.get({ allUrls: [] }, (result): void => {
 		// Reinsert all urls to storage, log to console success
 		// Get urls array from allUrls key
-		let urlsArray: string[] = result.allUrls
+		const urlsArray: string[] = result.allUrls
 		// For each url string
 		for (let i = 0; i < urlsArray.length; i++)
 			console.log("urlsArray[" + i + "] = " + urlsArray[i])
@@ -48,7 +50,7 @@ let printFromStorage = (): void => {
 }
 
 // Checks through urlsList to verify if url has already been incorporated to list, returning true if it is found
-let alreadyHaveUrl = (url: string): boolean => {
+const alreadyHaveUrl = (url: string): boolean => {
 	if (urlsList.indexOf(url) !== -1) return true
 	return false
 }
@@ -56,7 +58,7 @@ let alreadyHaveUrl = (url: string): boolean => {
 // Click listener to add button
 addUrlButton.addEventListener("click", (): void => {
 	// Get input text
-	let newUrlText: string = urlInput.value.toLowerCase()
+	const newUrlText: string = urlInput.value.toLowerCase()
 
 	// If url matching input text already exists in list, don't add it again
 	if (alreadyHaveUrl(newUrlText)) {
@@ -65,7 +67,7 @@ addUrlButton.addEventListener("click", (): void => {
 	}
 
 	// Create a new p element with this url
-	let newUrlItem: HTMLElement = document.createElement("p")
+	const newUrlItem: HTMLElement = document.createElement("p")
 	newUrlItem.classList.add("urlItem")
 	newUrlItem.innerHTML = urlInput.value
 	document.body.appendChild(newUrlItem)
@@ -95,7 +97,7 @@ addUrlButton.addEventListener("click", (): void => {
 // Click listener to add button
 deleteUrlButton.addEventListener("click", (): void => {
 	// Get input text
-	let newUrlText: string = urlInput.value.toLowerCase()
+	const newUrlText: string = urlInput.value.toLowerCase()
 
 	// If no url matching the input text exists, can't do anything
 	if (!alreadyHaveUrl(newUrlText)) {
@@ -104,11 +106,11 @@ deleteUrlButton.addEventListener("click", (): void => {
 	}
 
 	// Remove this URL from the array
-	let index: number = urlsList.indexOf(newUrlText)
+	const index: number = urlsList.indexOf(newUrlText)
 	urlsList.splice(index, 1)
 
 	// Remove this URL from visible list
-	let urlItems: HTMLCollectionOf<Element> =
+	const urlItems: HTMLCollectionOf<Element> =
 		document.getElementsByClassName("urlItem")
 	urlItems[index].remove()
 
@@ -135,7 +137,7 @@ deleteUrlButton.addEventListener("click", (): void => {
 clearButton.addEventListener("click", (): void => {
 	// Clear all urls from storage
 	chrome.storage.sync.clear((): void => {
-		let urlItems: HTMLCollectionOf<Element> =
+		const urlItems: HTMLCollectionOf<Element> =
 			document.getElementsByClassName("urlItem")
 
 		for (let i = urlItems.length - 1; i >= 0; i--) urlItems[i].remove()

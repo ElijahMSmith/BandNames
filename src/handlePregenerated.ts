@@ -1,12 +1,14 @@
-var maxStoredLength = 0 // Longest word we have
-var minStoredLength = 30
+console.log("global test 1")
 
-var bandNames: string[][] = [] // Ever growing list of good band names
-var cumFreq: number[] = []
+let maxStoredLength = 0 // Longest word we have
+let minStoredLength = 30
 
-var lastGeneration = -1
+const bandNames: string[][] = [] // Ever growing list of good band names
+const cumFreq: number[] = []
 
-let newBandName = (): void => {
+let lastGeneration = -1
+
+const newBandName = (): void => {
 	// Pick new name and set new text
 	let maxInput: string = maxCharInput.value,
 		minInput: string = minCharInput.value
@@ -94,15 +96,16 @@ let newBandName = (): void => {
 		// Moving that outside the timeout causes the popup to frequently be resizing and look really glitchy.
 
 		// Get width of the two longest elements
-		let suggestionWidth: number = suggestion.getBoundingClientRect().width
-		let suggestionHeaderWidth: number =
+		const suggestionWidth: number = suggestion.getBoundingClientRect().width
+		const suggestionHeaderWidth: number =
 			suggestionHeader.getBoundingClientRect().width
-		let copyNameWidth: number = copyName.getBoundingClientRect().width
-		let refreshNameWidth: number = refreshName.getBoundingClientRect().width
-		let switchModeWidth: number = switchMode.getBoundingClientRect().width
+		const copyNameWidth: number = copyName.getBoundingClientRect().width
+		const refreshNameWidth: number =
+			refreshName.getBoundingClientRect().width
+		const switchModeWidth: number = switchMode.getBoundingClientRect().width
 
 		// Determine width of the longest of the three elements on the popup
-		let newWidth: number = Math.max(
+		const newWidth: number = Math.max(
 			Math.max(
 				Math.max(suggestionWidth, copyNameWidth), // Longest element of the buttons or the name
 				suggestionHeaderWidth // If the header is still longer, use that length
@@ -130,8 +133,7 @@ let newBandName = (): void => {
 }
 
 // Get all band names from JSON file
-let loadNameData = async (): Promise<void> => {
-	console.log("test")
+const loadNameData = async (): Promise<void> => {
 	const response: Response | void = await fetch(
 		"../loads/PreGenerated.json"
 	).catch(function (error) {
@@ -153,11 +155,11 @@ let loadNameData = async (): Promise<void> => {
 	}
 
 	response.json().then((data): void => {
-		let loadedNames: string[] = data.allNames
+		const loadedNames: string[] = data.allNames
 
 		for (let currentName of loadedNames) {
 			// Get number of characters in name, update global min/max
-			let noSpaces: number = currentName.replace(/ /g, "").length
+			const noSpaces: number = currentName.replace(/ /g, "").length
 			maxStoredLength =
 				maxStoredLength > noSpaces ? maxStoredLength : noSpaces
 			minStoredLength =

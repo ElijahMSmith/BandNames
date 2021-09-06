@@ -1,18 +1,20 @@
-// Get body tag, suggestion text/header, and copy/refresh buttons
-let suggestionHeader = document.getElementById("suggestionHeader")
-let suggestion = document.getElementById("suggestion")
+console.log("global test 3")
 
-let copyName: HTMLButtonElement = <HTMLButtonElement>(
+// Get body tag, suggestion text/header, and copy/refresh buttons
+const suggestionHeader = document.getElementById("suggestionHeader")
+const suggestion = document.getElementById("suggestion")
+
+const copyName: HTMLButtonElement = <HTMLButtonElement>(
 	document.getElementById("copyName")
 )
-let refreshName = <HTMLButtonElement>document.getElementById("refreshName")
-let switchMode: HTMLButtonElement = <HTMLButtonElement>(
+const refreshName = <HTMLButtonElement>document.getElementById("refreshName")
+const switchMode: HTMLButtonElement = <HTMLButtonElement>(
 	document.getElementById("switchMode")
 )
 
-let maxCharInput = <HTMLInputElement>document.getElementById("maxCharInput")
-let minCharInput = <HTMLInputElement>document.getElementById("minCharInput")
-let body = document.getElementsByTagName("body")[0]
+const maxCharInput = <HTMLInputElement>document.getElementById("maxCharInput")
+const minCharInput = <HTMLInputElement>document.getElementById("minCharInput")
+const body = document.getElementsByTagName("body")[0]
 
 // Briefly changes button color to indicate that it actually pressed
 const resetButton = (button: HTMLButtonElement): void => {
@@ -28,7 +30,7 @@ const resetButton = (button: HTMLButtonElement): void => {
 // Copies text input (suggested band name) to clipboard
 const copyTextToClipboard = (text: string): void => {
 	// Create a text box field where we can insert text to.
-	let copyFrom: HTMLTextAreaElement = document.createElement("textarea")
+	const copyFrom: HTMLTextAreaElement = document.createElement("textarea")
 
 	// Set the text content to be the text you wished to copy.
 	copyFrom.textContent = text

@@ -12,10 +12,12 @@ const urlsDiv: HTMLElement = document.getElementById("enabledUrls")
 const clearButton: HTMLButtonElement = <HTMLButtonElement>(
 	document.getElementById("clearButton")
 )
+
 let urlsList: string[] = [] // Initialize empty urls array
 
 // When page reloads, flush whatever is in the urls array and reload everything from storage
 window.onload = (): void => {
+	console.log("onLoad")
 	urlsList = [] // Flush urls array
 
 	// On page load, query all urls from storage and add p for each to urlsDiv
@@ -37,6 +39,7 @@ window.onload = (): void => {
 
 // For debugging
 const printFromStorage = (): void => {
+	console.log("printFromStorage")
 	chrome.storage.sync.get({ allUrls: [] }, (result): void => {
 		// Reinsert all urls to storage, log to console success
 		// Get urls array from allUrls key
@@ -49,12 +52,14 @@ const printFromStorage = (): void => {
 
 // Checks through urlsList to verify if url has already been incorporated to list, returning true if it is found
 const alreadyHaveUrl = (url: string): boolean => {
+	console.log("alreadyHaveUrl")
 	if (urlsList.indexOf(url) !== -1) return true
 	return false
 }
 
 // Click listener to add button
 addUrlButton.addEventListener("click", (): void => {
+	console.log("addUrlButtonClick")
 	// Get input text
 	const newUrlText: string = urlInput.value.toLowerCase()
 
@@ -94,6 +99,7 @@ addUrlButton.addEventListener("click", (): void => {
 
 // Click listener to add button
 deleteUrlButton.addEventListener("click", (): void => {
+	console.log("deleteUrlButtonClick")
 	// Get input text
 	const newUrlText: string = urlInput.value.toLowerCase()
 
@@ -133,6 +139,7 @@ deleteUrlButton.addEventListener("click", (): void => {
 
 // Add listener to clear urls button
 clearButton.addEventListener("click", (): void => {
+	console.log("clearButtonClick")
 	// Clear all urls from storage
 	chrome.storage.sync.clear((): void => {
 		const urlItems: HTMLCollectionOf<Element> =
@@ -151,6 +158,7 @@ clearButton.addEventListener("click", (): void => {
 
 // Executes the add url process via clicking on the button when user presses the enter key
 urlInput.addEventListener("keyup", (event: KeyboardEvent): void => {
+	console.log("urlInputChange")
 	if (event.code === "Enter") {
 		// Cancel the default action
 		event.preventDefault()
@@ -158,7 +166,6 @@ urlInput.addEventListener("keyup", (event: KeyboardEvent): void => {
 		addUrlButton.click()
 	}
 
-	// Number 46 is the "Delete" key on the keyboard
 	if (event.code === "Delete") {
 		// Cancel the default action
 		event.preventDefault()

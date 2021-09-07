@@ -1,5 +1,3 @@
-console.log("global test 1")
-
 let maxStoredLength = 0 // Longest word we have
 let minStoredLength = 30
 
@@ -8,7 +6,7 @@ const cumFreq: number[] = []
 
 let lastGeneration = -1
 
-const newBandName = (): void => {
+const newPregenName = (): void => {
 	// Pick new name and set new text
 	let maxInput: string = maxCharInput.value,
 		minInput: string = minCharInput.value
@@ -82,58 +80,11 @@ const newBandName = (): void => {
 
 	// Pick the name and update suggestion text
 	suggestion.innerText = bandNames[outerIndex][innerIndex]
-
-	// After we let element attributes update, update box size to match size of the band name
-	setTimeout((): void => {
-		// Initially reset body to full size so we aren't constricting the newly inserted word
-		// The word renders in one line, then we constrain the box to be smaller if we can so it fits better
-		body.style.width = "450px"
-
-		// Set display of suggestion to temporarily not take the entire width of the popup, letting us measure text width
-		suggestion.style.display = "inline-block"
-
-		// Note - the above happens so quickly that it isn't visible, but is required to make the math below work.
-		// Moving that outside the timeout causes the popup to frequently be resizing and look really glitchy.
-
-		// Get width of the two longest elements
-		const suggestionWidth: number = suggestion.getBoundingClientRect().width
-		const suggestionHeaderWidth: number =
-			suggestionHeader.getBoundingClientRect().width
-		const copyNameWidth: number = copyName.getBoundingClientRect().width
-		const refreshNameWidth: number =
-			refreshName.getBoundingClientRect().width
-		const switchModeWidth: number = switchMode.getBoundingClientRect().width
-
-		// Determine width of the longest of the three elements on the popup
-		const newWidth: number = Math.max(
-			Math.max(
-				Math.max(suggestionWidth, copyNameWidth), // Longest element of the buttons or the name
-				suggestionHeaderWidth // If the header is still longer, use that length
-			),
-			300 // Make the size AT LEAST 300 pixels regardless of previous comparisons
-		)
-
-		// Update body size to max width of elements
-		body.style.width = newWidth + "px"
-
-		// Now to center buttons and title in the box
-
-		// Update body size to max width of elements
-		suggestionHeader.style.marginLeft =
-			(newWidth - suggestionHeaderWidth) / 2 + "px"
-		copyName.style.marginLeft = (newWidth - copyNameWidth) / 2 + "px"
-		refreshName.style.marginLeft = (newWidth - refreshNameWidth) / 2 + "px"
-		switchMode.style.marginLeft = (newWidth - switchModeWidth) / 2 + "px"
-
-		// Center in box
-		suggestion.style.display = "block"
-
-		lastGeneration = generated
-	}, 100)
+	lastGeneration = generated
 }
 
 // Get all band names from JSON file
-const loadNameData = async (): Promise<void> => {
+const loadPregenNameData = async (): Promise<void> => {
 	const response: Response | void = await fetch(
 		"../loads/PreGenerated.json"
 	).catch(function (error) {
@@ -188,17 +139,17 @@ const loadNameData = async (): Promise<void> => {
 		// Set input to be our found max, then load up first band name
 		maxCharInput.value = maxStoredLength.toString()
 		minCharInput.value = minStoredLength.toString()
-		newBandName()
+		newPregenName()
 	})
 	console.log("Finished load")
 }
 
-// Button listener for copy name button
+// Button listener for refresh button
 refreshName.addEventListener("click", (): void => {
 	// Generate new band name for the popup and adjust content sizes
-	newBandName()
+	newPregenName()
 
 	resetButton(refreshName)
 })
 
-loadNameData() // Call that function to load the band names
+loadPregenNameData() // Call that function to load the band names

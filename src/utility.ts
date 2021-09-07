@@ -1,5 +1,3 @@
-console.log("global test 3")
-
 // Get body tag, suggestion text/header, and copy/refresh buttons
 const suggestionHeader = document.getElementById("suggestionHeader")
 const suggestion = document.getElementById("suggestion")
@@ -7,14 +5,30 @@ const suggestion = document.getElementById("suggestion")
 const copyName: HTMLButtonElement = <HTMLButtonElement>(
 	document.getElementById("copyName")
 )
-const refreshName = <HTMLButtonElement>document.getElementById("refreshName")
 const switchMode: HTMLButtonElement = <HTMLButtonElement>(
 	document.getElementById("switchMode")
 )
 
+// Conditional buttons depending on active page
+const refreshAdjective = <HTMLButtonElement>(
+	document.getElementById("refreshAdjective")
+)
+const randomGenButtonContainer: HTMLElement = document.getElementById(
+	"randomGenButtonContainer"
+)
+const refreshNoun = <HTMLButtonElement>document.getElementById("refreshNoun")
+const refreshBoth = <HTMLButtonElement>document.getElementById("refreshBoth")
+const refreshName = <HTMLButtonElement>document.getElementById("refreshName")
+
 const maxCharInput = <HTMLInputElement>document.getElementById("maxCharInput")
 const minCharInput = <HTMLInputElement>document.getElementById("minCharInput")
 const body = document.getElementsByTagName("body")[0]
+
+// Custom not currently in use, but will be at some point
+const PREGEN = 0,
+	RANDOM = 1,
+	CUSTOM = 2
+let currentMode: number = PREGEN
 
 // Briefly changes button color to indicate that it actually pressed
 const resetButton = (button: HTMLButtonElement): void => {
@@ -64,7 +78,26 @@ copyName.addEventListener("click", function (): void {
 
 // Button listener for copy name button
 switchMode.addEventListener("click", function (): void {
-	// TODO: Make stylistic changes depending on current mode and reshuffle listeners and such
+	if (currentMode === PREGEN) {
+		// Transition to randomly generated names
+
+		randomGenButtonContainer.style.display = "block"
+		refreshName.style.display = "none"
+		body.style.backgroundColor = "#eadaff"
+	} else if ((currentMode = RANDOM)) {
+		// Transition to pre-generated names
+		// (later will be to custom, then custom -> pre-generated)
+
+		randomGenButtonContainer.style.display = "none"
+		refreshName.style.display = "block"
+		body.style.backgroundColor = "#d4f9ff"
+	} else {
+		// To be implemented down the line
+	}
+
+	// Move to next mode
+	// Change to 3 once custom is implemented
+	currentMode = ++currentMode % 2
 
 	resetButton(switchMode)
 })

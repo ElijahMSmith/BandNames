@@ -1,4 +1,5 @@
 # BandNames
+
 BandNames is a Chrome extension that targets sites like Discord where changing your username frequently is a natural habit.
 
 When arriving at a site you've determine worthy of your creative genius, this extension can be clicked to view a randomly selected band name that will surely get you a lot of attention one way or another.
@@ -27,10 +28,10 @@ Use this page to input addition URLs you want this extension to open on. You can
 
 ## Recent Changes
 
-- Updated the picking algorithm to equally balance all names. The previous algorithm picked a random length of name, then randomly picked one name of that length, causing names with less-common lengths to appear more frequently.
-- Lots of new names!
+-   Updated the picking algorithm to equally balance all names. The previous algorithm picked a random length of name, then randomly picked one name of that length, causing names with less-common lengths to appear more frequently.
+-   Lots of new names!
 
 ### Future Changes
 
-- Allow for custom names to be added and export your current list of names
-- Allow for in-popup generation of new names
+-   Allow for in-popup generation of new names
+-   Allow for custom names to be added and export your current list of names

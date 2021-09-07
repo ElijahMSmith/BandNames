@@ -1,4 +1,3 @@
-console.log("global test backgroundScript")
 // ------------------ Setup Section ------------------
 
 // Global url array so we don't have to reload every update
@@ -7,7 +6,7 @@ let popupUrls: chrome.events.UrlFilter[] = []
 // Opens popup when listener called
 const urlListener = (): void => {
 	const newWindow: Window = window.open(
-		"./html/suggestionNewWindow.html",
+		"./html/suggestionPopup.html",
 		"BandNames",
 		"width=500,height=330,status=0,scrollbars=1,resizable=no"
 	)

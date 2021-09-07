@@ -13,20 +13,5 @@ TODOS:
     - Also must keep the generated file of custom names (which loads with the rest of the band names into one big array to pick from)
         - When extension updates/reloads, that file shouldn't be replaced.
 
-
-
-Generation planning:
-- Each list gets loaded when the popup or popout is created, nouns and adjectives, to their own arrays
-    - Sort by length of the word
-- HTML should have a place for the name generated
-- Should be able to generated entirely new names, or the noun/adjective individually
-- Also needs a maximum length field
-
-- When generating both: Pick a noun at random, then adjective
-    - Noun should be no longer than (maxCharCount - minAdjectiveLength)
-    - Adjective should be chosen randomly from those no longer than (maxCharCount - chosenNounLength)
-- If regenerating either part or both, the next option should not contain either the same noun or adjective unless there is no other option for one or the either.
-
-How do we swap views? Need to use same popup.
-- Make the JS for the other views in another attached script, make js files for each view and one for things that occur in each view
-- When swapping views, change stylings and whatever from general script
+Once random generation is working, it would be cool to have a stored state in the chrome storage that tells us which mode to open to initially
+Defaults to whatever the last used mode was when either the popup or window was open

@@ -1,5 +1,3 @@
-console.log("global test 2")
-
 // Get all the elements we interact with
 const urlInput: HTMLInputElement = <HTMLInputElement>(
 	document.getElementById("urlInput")

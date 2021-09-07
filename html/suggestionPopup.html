@@ -2,31 +2,44 @@
     <head>
         <style>
             body {
-                height: 150px;
-                width: 300px;
                 background-color: #d4f9ff;
+                width: 450px;
             }
 
-            #suggestionHeader {
-                margin-top: -22px;
-                margin-bottom: 0px;
-                display: inline-block;
+            #suggestionHeader, #suggestion {
                 text-align: center;
-            }
-
-            #suggestion {
-                margin-top: 5px;
+                font-weight: bold;
                 display: block;
                 text-align: center;
             }
 
+            #copyName {
+                margin-top: 20px;
+            }
+
             button {
-                display: inline-block;
-                width: 150px;
+                width: 220px;
                 text-align: center;
                 background-color: #ff737c;
                 color: #ffffff;
-                margin-top: 5px;
+                margin: 5px auto auto auto;
+            }
+
+            button:not(.randomGenButtons) {
+                display: block;
+            }
+
+            #refreshNoun, #refreshAdjective {
+                display: inline-block;
+                width: 110px;
+            }
+
+            #refreshBoth {
+                display: block;
+            }
+
+            #randomGenButtonContainer {
+                display: none;
             }
 
             div {
@@ -66,9 +79,19 @@
         <h3 id="suggestionHeader">Suggested Username:</p>
         <h1 id="suggestion">PLACEHOLDER</h1>
         <button id="copyName">Copy to Clipboard</button>
-        <button id="refreshName">Refresh Name</button>
+
         <!-- When in random generation mode, this button will be updated with new text to swap back to pre-generated -->
         <button id="switchMode">Generate Randomly</button>
+
+        <!-- Enabled in pre-generated mode -->
+        <button id="refreshName" class="preGenButtons">Refresh Name</button>
+        
+        <!-- Enabled in random-generated mode (initially disabled)  -->
+        <div id="randomGenButtonContainer">
+            <button id="refreshAdjective" class="randomGenButtons">New Adjective</button>
+            <button id="refreshNoun" class="randomGenButtons">New Noun</button>
+            <button id="refreshBoth" class="randomGenButtons">Change Both</button>
+        </div>
         
         <div id="minCharHolder" class="charHolder">
             <p id="minCharLabel">Min Characters: </p>

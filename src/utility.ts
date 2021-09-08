@@ -1,4 +1,4 @@
-// Get body tag, suggestion text/header, and copy/refresh buttons
+// Tag imports
 const suggestionHeader = document.getElementById("suggestionHeader")
 const suggestion = document.getElementById("suggestion")
 
@@ -10,16 +10,18 @@ const switchMode: HTMLButtonElement = <HTMLButtonElement>(
 )
 
 // Conditional buttons depending on active page
-const refreshAdjective = <HTMLButtonElement>(
-	document.getElementById("refreshAdjective")
-)
+const refreshName = <HTMLButtonElement>document.getElementById("refreshName")
+
 const randomGenButtonContainer: HTMLElement = document.getElementById(
 	"randomGenButtonContainer"
 )
+const refreshAdjective = <HTMLButtonElement>(
+	document.getElementById("refreshAdjective")
+)
 const refreshNoun = <HTMLButtonElement>document.getElementById("refreshNoun")
 const refreshBoth = <HTMLButtonElement>document.getElementById("refreshBoth")
-const refreshName = <HTMLButtonElement>document.getElementById("refreshName")
 
+// Character inputs
 const maxCharInput = <HTMLInputElement>document.getElementById("maxCharInput")
 const minCharInput = <HTMLInputElement>document.getElementById("minCharInput")
 const body = document.getElementsByTagName("body")[0]
@@ -84,6 +86,12 @@ switchMode.addEventListener("click", function (): void {
 		randomGenButtonContainer.style.display = "block"
 		refreshName.style.display = "none"
 		body.style.backgroundColor = "#eadaff"
+
+		refreshBoth.click()
+
+		// setTimeout((): void => {
+		// 	refreshBoth.click()
+		// }, 100) // IDK if delay is actually needed, leaving in case
 	} else if ((currentMode = RANDOM)) {
 		// Transition to pre-generated names
 		// (later will be to custom, then custom -> pre-generated)
@@ -91,6 +99,8 @@ switchMode.addEventListener("click", function (): void {
 		randomGenButtonContainer.style.display = "none"
 		refreshName.style.display = "block"
 		body.style.backgroundColor = "#d4f9ff"
+
+		refreshName.click()
 	} else {
 		// To be implemented down the line
 	}

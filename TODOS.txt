@@ -15,3 +15,11 @@ TODOS:
 
 Once random generation is working, it would be cool to have a stored state in the chrome storage that tells us which mode to open to initially
 Defaults to whatever the last used mode was when either the popup or window was open
+
+
+Install "Sync Settings extension"
+
+
+
+CAN WE ABSTRACT THE CHOOSING FROM A LIST FUNCTION SO THAT IT CAN BE USED GIVEN AN OBJECT PASSED IN WITH THAT DATA?
+Would probably want to go back to an object in pregen, rather than pack every time it's called.

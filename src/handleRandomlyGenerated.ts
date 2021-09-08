@@ -1,112 +1,150 @@
-let currentAdjective: string, currentNoun: string;
-let minAdjectiveLength: number, maxAdjectiveLength: number;
-let minNounLength: number, maxNounLength: number
+interface StorageLayout {
+	fullList: string[][]
+	cumulativeFreq: number[]
+	minLength: number
+	maxLength: number
+}
 
-const allAdjectives: string[][] = [[]]
-const allNouns: string[][] = [[]]
+const adjectives: StorageLayout = {
+	fullList: [],
+	cumulativeFreq: [],
+	minLength: Number.MAX_SAFE_INTEGER,
+	maxLength: -1,
+}
 
-const nounCumFreq: number[] = []
-const adjectiveCumFreq: number[] = []
+const nouns: StorageLayout = {
+	fullList: [],
+	cumulativeFreq: [],
+	minLength: Number.MAX_SAFE_INTEGER,
+	maxLength: -1,
+}
+
+interface listIndices {
+	outer: number
+	inner: number
+}
+
+// Because of the way this algorithm picks from a list, this index is accumulated
+// for every name encountered from left to right, even if the first name isn't at an early out-array index.
+const currentAdjective = "PLACEHOLDER"
+const currentNoun: string = "PLACEHOLDER"
 
 const newRandomName = (): void => {
+	if (adjectives.fullList.length === 0) {
+		console.log(
+			"No adjectives loaded due to an error, cannot generate a new name"
+		)
+		return
+	}
+
+	if (nouns.fullList.length === 0) {
+		console.log(
+			"No adjectives loaded due to an error, cannot generate a new name"
+		)
+		return
+	}
+
+	newRandomAdjective()
+	newRandomNoun()
 }
 
 const newRandomAdjective = (): void => {
-
+	if (adjectives.fullList.length === 0) {
+		console.log(
+			"No adjectives loaded due to an error, cannot generate a new name"
+		)
+		return
+	}
+	//TODO
 }
 
 const newRandomNoun = (): void => {
-
+	if (nouns.fullList.length === 0) {
+		console.log(
+			"No adjectives loaded due to an error, cannot generate a new name"
+		)
+		return
+	}
+	//TODO
 }
 
 // Get all adjectives and nouns from JSON files
-const loadNounAdjectiveData = async (): Promise<void> => {
-    // TODO
-	const adjectivesResponse: Response | void = await fetch(
-		"../loads/Adjectives.json"
-	).catch(function (error) {
-		console.log("Fetch Error :-S", error)
+const loadNameData = async (
+	path: string,
+	destination: StorageLayout
+): Promise<void> => {
+	const response: Response | void = await fetch(path).catch(function (error) {
+		console.log(`Fetch error at path '${path}: ${error}'`)
 		return
 	})
 
-    const nounsResponse: Response | void = await fetch(
-		"../loads/Adjectives.json"
-	).catch(function (error) {
-		console.log("Fetch Error :-S", error)
-		return
-	})
-
-    // Error check responses
-	if (!adjectivesResponse) {
-		console.log("Looks like there was a problem - Adjectives request response is void")
-		return
-	}
-
-	if (adjectivesResponse.status !== 200) {
+	// Error check responses
+	if (!response) {
 		console.log(
-			"Looks like there was a problem. Adjective Request Status Code: " +
-				(adjectivesResponse ? adjectivesResponse.status : "N/A")
+			`Looks like there was a problem - ${path} request response is void`
+		)
+		return
+	} else if (response.status !== 200) {
+		console.log(
+			`Looks like there was a problem - ${path} response status code: ${response.status}`
 		)
 		return
 	}
 
-	if (!nounsResponse) {
-		console.log("Looks like there was a problem - Nouns request response is void")
-		return
-	}
+	response.json().then((data): void => {
+		const loadedWords: string[] = data.allWords
+		const fullList: string[][] = destination.fullList
+		const cumulativeFrequency: number[] = destination.cumulativeFreq
 
-	if (nounsResponse.status !== 200) {
-		console.log(
-			"Looks like there was a problem. Noun Request Status Code: " +
-				(nounsResponse ? nounsResponse.status : "N/A")
-		)
-		return
-	}
+		for (let word of loadedWords) {
+			const len = word.length
 
-	adjectivesResponse.json().then((data): void => {
-		const loadedNames: string[] = data.allNames
+			destination.minLength = Math.min(destination.minLength, len)
+			destination.maxLength = Math.max(destination.maxLength, len)
 
-        //TODO
+			// Push any required new arrays onto the end so that we have an array at the required index
+			while (fullList[len] === undefined) fullList.push([])
+			fullList[len].push(word)
+
+			const curFreq: number = cumulativeFrequency[len]
+			cumulativeFrequency[len] = !curFreq ? 1 : curFreq + 1
+		}
+
+		// Move through cumulativeFreq and add previous slot so that our array holds how many names are the length of the index or shorter
+		for (let i = 0; i < cumulativeFrequency.length; i++) {
+			const prev: number = cumulativeFrequency[i - 1]
+			const curr: number = cumulativeFrequency[i]
+			cumulativeFrequency[i] = (prev ? prev : 0) + (curr ? curr : 0)
+		}
 	})
-    
-	nounsResponse.json().then((data): void => {
-		const loadedNames: string[] = data.allNames
+	console.log(`Loaded from ${path} successfully!`)
+}
 
-		//TODO
-	})
-	console.log("Finished load")
+// Updates after all refreshes have finished, and not in the middle of doing both together
+const updateSuggestion = (): void => {
+	suggestion.innerText = currentAdjective + " " + currentNoun
 }
 
 // Button listener for copy name button
 refreshAdjective.addEventListener("click", (): void => {
-    newRandomAdjective()
+	newRandomAdjective()
+	updateSuggestion()
 	resetButton(refreshName)
 })
 
 // Button listener for copy name button
 refreshNoun.addEventListener("click", (): void => {
-    newRandomNoun()
+	newRandomNoun()
+	updateSuggestion()
 	resetButton(refreshName)
 })
 
 // Button listener for copy name button
 refreshBoth.addEventListener("click", (): void => {
-    newRandomName()
+	newRandomName()
+	updateSuggestion()
 	resetButton(refreshName)
 })
 
-loadNounAdjectiveData() // Call that function to load the band names
-
-/*
-Generation planning:
-- Each list gets loaded when the popup or popup is created, nouns and adjectives, to their own arrays
-    - Sort by length of the word
-- HTML should have a place for the name generated
-- Should be able to generated entirely new names, or the noun/adjective individually
-- Also needs a maximum length field
-
-- When generating both: Pick a noun at random, then adjective
-    - Noun should be no longer than (maxCharCount - minAdjectiveLength)
-    - Adjective should be chosen randomly from those no longer than (maxCharCount - chosenNounLength)
-- If regenerating either part or both, the next option should not contain either the same noun or adjective unless there is no other option for one or the either.
-*/
+loadNameData("../loads/Adjectives.json", adjectives)
+loadNameData("../loads/Nouns.json", nouns)

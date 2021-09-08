@@ -1,10 +1,9 @@
-let maxStoredLength = 0 // Longest word we have
-let minStoredLength = 30
+const pregenNames: string[][] = []
+const pregenCumulativeFreq: number[] = []
+let minPregenLength: number = Number.MAX_SAFE_INTEGER
+let maxPregenLength: number = -1
 
-const bandNames: string[][] = [] // Ever growing list of good band names
-const cumFreq: number[] = []
-
-let lastGeneration = -1
+let lastPregen = -1
 
 const newPregenName = (): void => {
 	// Pick new name and set new text
@@ -12,23 +11,21 @@ const newPregenName = (): void => {
 		minInput: string = minCharInput.value
 	const numberRegex = /^[0-9]{1,2}$/
 
-	if (!numberRegex.test(maxInput)) maxInput = maxStoredLength.toString()
+	if (!numberRegex.test(maxInput)) maxInput = maxPregenLength.toString()
 
-	if (!numberRegex.test(minInput)) minInput = minStoredLength.toString()
+	if (!numberRegex.test(minInput)) minInput = minPregenLength.toString()
 
 	// Parse that value into an integer, replacing it if out of bounds with the correct bound
 	let maxSelection: number = parseInt(maxInput)
 	let minSelection: number = parseInt(minInput)
 
-	console.log(minSelection, " ", maxSelection)
-
 	// Fix maxSelection to not exceed either min or max boundaries
-	if (maxSelection < minStoredLength) maxSelection = minStoredLength
-	if (maxSelection > maxStoredLength) maxSelection = maxStoredLength
+	if (maxSelection < minPregenLength) maxSelection = minPregenLength
+	if (maxSelection > maxPregenLength) maxSelection = maxPregenLength
 
 	// Fix minSelection to not exceed either min or max boundaries
-	if (minSelection < minStoredLength) minSelection = minStoredLength
-	if (minSelection > maxStoredLength) minSelection = maxStoredLength
+	if (minSelection < minPregenLength) minSelection = minPregenLength
+	if (minSelection > maxPregenLength) minSelection = maxPregenLength
 
 	// Fix maxSelection being less than minSelection
 	if (maxSelection < minSelection) {
@@ -42,8 +39,10 @@ const newPregenName = (): void => {
 
 	// The number of names with length less than or equal to maxSelection and more than or equal to minSelection
 	const possibleNames: number =
-		cumFreq[maxSelection] -
-		(cumFreq[minSelection - 1] ? cumFreq[minSelection - 1] : 0)
+		pregenCumulativeFreq[maxSelection] -
+		(pregenCumulativeFreq[minSelection - 1]
+			? pregenCumulativeFreq[minSelection - 1]
+			: 0)
 
 	// If we don't have any names to pick from, we did something wrong
 	if (possibleNames === 0) {
@@ -51,8 +50,8 @@ const newPregenName = (): void => {
 		return
 	}
 
-	const minGen: number = cumFreq[minSelection - 1]
-		? cumFreq[minSelection - 1]
+	const minGen: number = pregenCumulativeFreq[minSelection - 1]
+		? pregenCumulativeFreq[minSelection - 1]
 		: 0
 
 	// Generate an index minGen <= index < minGen + range
@@ -60,7 +59,7 @@ const newPregenName = (): void => {
 
 	// Don't generate the same name two times in a row, unless there are no other names to generate
 	if (possibleNames > 1) {
-		while (generated === lastGeneration)
+		while (generated === lastPregen)
 			generated = Math.floor(Math.random() * possibleNames) + minGen
 	}
 
@@ -72,35 +71,36 @@ const newPregenName = (): void => {
 
 	// Move to the correct outer array index where the name in the full list that corresponds to the generated index lies
 	let outerIndex = 0
-	while (generated >= cumFreq[outerIndex]) outerIndex++
+	while (generated >= pregenCumulativeFreq[outerIndex]) outerIndex++
 
-	// Pick the correct name corresponding to the generated index (generated - previous cumFreq value) in the array at outerIndex
+	// Pick the correct name corresponding to the generated index (generated - previous pregenCumulativeFreq value) in the array at outerIndex
 	const innerIndex: number =
-		generated - (cumFreq[outerIndex - 1] ? cumFreq[outerIndex - 1] : 0)
+		generated -
+		(pregenCumulativeFreq[outerIndex - 1]
+			? pregenCumulativeFreq[outerIndex - 1]
+			: 0)
 
 	// Pick the name and update suggestion text
-	suggestion.innerText = bandNames[outerIndex][innerIndex]
-	lastGeneration = generated
+	suggestion.innerText = pregenNames[outerIndex][innerIndex]
+	lastPregen = generated
 }
 
 // Get all band names from JSON file
 const loadPregenNameData = async (): Promise<void> => {
-	const response: Response | void = await fetch(
-		"../loads/PreGenerated.json"
-	).catch(function (error) {
+	const path = "../loads/PreGenerated.json"
+	const response: Response | void = await fetch(path).catch(function (error) {
 		console.log("Fetch Error :-S", error)
 		return
 	})
 
 	if (!response) {
-		console.log("Looks like there was a problem - Response is void")
+		console.log(`Looks like there was a problem - ${path} response is void`)
 		return
 	}
 
 	if (response.status !== 200) {
 		console.log(
-			"Looks like there was a problem. Status Code: " +
-				(response ? response.status : "N/A")
+			`Looks like there was a problem. ${path} request status code: ${response.status}`
 		)
 		return
 	}
@@ -111,37 +111,36 @@ const loadPregenNameData = async (): Promise<void> => {
 		for (let currentName of loadedNames) {
 			// Get number of characters in name, update global min/max
 			const noSpaces: number = currentName.replace(/ /g, "").length
-			maxStoredLength =
-				maxStoredLength > noSpaces ? maxStoredLength : noSpaces
-			minStoredLength =
-				minStoredLength < noSpaces ? minStoredLength : noSpaces
+
+			minPregenLength = Math.min(minPregenLength, noSpaces)
+			maxPregenLength = Math.max(maxPregenLength, noSpaces)
 
 			// Push any required new arrays onto the end so that we have an array at the required index
-			while (bandNames[noSpaces] === undefined) bandNames.push([])
+			while (pregenNames[noSpaces] === undefined) pregenNames.push([])
 
 			// Push this name onto array at correct index (the number of characters of the string)
-			bandNames[noSpaces].push(currentName)
+			pregenNames[noSpaces].push(currentName)
 
-			// Add one to the index in cumFreq that this array corresponds to
-			const curFreq: number = cumFreq[noSpaces]
-			cumFreq[noSpaces] = curFreq === undefined ? 1 : curFreq + 1
+			// Add one to the index in pregenCumulativeFreq that this array corresponds to
+			const curFreq: number = pregenCumulativeFreq[noSpaces]
+			pregenCumulativeFreq[noSpaces] = !curFreq ? 1 : curFreq + 1
 		}
 
-		// Move through cumFreq and add previous slot so that our array holds how many names are the length of the index or shorter
-		for (let i = 0; i < cumFreq.length; i++) {
-			const prev: number = cumFreq[i - 1]
-			const curr: number = cumFreq[i]
-			cumFreq[i] =
+		// Move through pregenCumulativeFreq and add previous slot so that our array holds how many names are the length of the index or shorter
+		for (let i = 0; i < pregenCumulativeFreq.length; i++) {
+			const prev: number = pregenCumulativeFreq[i - 1]
+			const curr: number = pregenCumulativeFreq[i]
+			pregenCumulativeFreq[i] =
 				(prev !== undefined ? prev : 0) +
 				(curr !== undefined ? curr : 0)
 		}
 
 		// Set input to be our found max, then load up first band name
-		maxCharInput.value = maxStoredLength.toString()
-		minCharInput.value = minStoredLength.toString()
+		maxCharInput.value = maxPregenLength.toString()
+		minCharInput.value = minPregenLength.toString()
 		newPregenName()
 	})
-	console.log("Finished load")
+	console.log(`Finished loading ${path}`)
 }
 
 // Button listener for refresh button

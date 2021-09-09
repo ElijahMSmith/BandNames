@@ -1,9 +1,5 @@
 TODOS:
-- JS setup that runs once when the scripts are first loaded to set the mode to whatever the default is, 
-  then perform the html updates and generation
-  - Take the generation out of the loading functions so we aren't generating and overwriting values before they are seen.
-
-
+Figure out why randomGen is still running out of bounds for maxPossible and possibleWords
 
 min/max are being updated correctly between layout changes but not for random gen when a new name is 
 created since that doesn't actually work right. Fix that and the min/max issues will resolve themselves

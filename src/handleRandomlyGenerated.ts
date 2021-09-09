@@ -3,7 +3,7 @@ const adjectives: StorageLayout = {
 	cumulativeFreq: [],
 	minLength: Number.MAX_SAFE_INTEGER,
 	maxLength: -1,
-	currentWord: "PLACEHOLDER",
+	currentWord: "TEMP",
 	currentWordIndex: -1,
 }
 
@@ -12,7 +12,7 @@ const nouns: StorageLayout = {
 	cumulativeFreq: [],
 	minLength: Number.MAX_SAFE_INTEGER,
 	maxLength: -1,
-	currentWord: "PLACEHOLDER",
+	currentWord: "TEMP",
 	currentWordIndex: -1,
 }
 
@@ -64,7 +64,7 @@ const loadNameData = async (
 		return
 	}
 
-	response.json().then((data): void => {
+	await response.json().then((data): void => {
 		const loadedWords: string[] = data.allWords
 		const fullList: string[][] = destination.fullList
 		const cumulativeFrequency: number[] = destination.cumulativeFreq
@@ -91,7 +91,6 @@ const loadNameData = async (
 		}
 	})
 	console.log(`Loaded from ${path} successfully!`)
-	newWordFromList(destination)
 }
 
 // Button listener for copy name button
@@ -111,6 +110,3 @@ refreshBoth.addEventListener("click", (): void => {
 	newFullName()
 	resetButton(refreshName)
 })
-
-loadNameData("../loads/Adjectives.json", adjectives)
-loadNameData("../loads/Nouns.json", nouns)

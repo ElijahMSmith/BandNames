@@ -52,7 +52,6 @@ const updateSuggestion = (): void => {
 	console.log(`Updating suggestion to ${suggestion.innerText}`)
 }
 
-
 const newWordFromList = (list: StorageLayout): void => {
 	// Pick new name and set new text
 	let minInput: string = minCharInput.value,
@@ -92,6 +91,9 @@ const newWordFromList = (list: StorageLayout): void => {
 	minCharInput.value = minSelection.toString()
 	maxCharInput.value = maxSelection.toString()
 
+	console.log('lateMinSelection', minSelection)
+	console.log('lateMaxSelection', maxSelection)
+
 	// Maximum possible length of the new thing being generated
 	let maxPossible: number;
 	if(list === pregenNames){
@@ -105,6 +107,11 @@ const newWordFromList = (list: StorageLayout): void => {
 			maxPossible = maxSelection
 		else
 			maxPossible = maxSelection - otherList.currentWord.length
+
+		// The number of remaining characters might or might not be larger than the largest word that this list has
+		// If it is too long, shorten maxPossible to the length of longest word in the list
+		// That way we aren't running out of bounds
+		if(list.cumulativeFreq.length < maxPossible) maxPossible = list.cumulativeFreq.length - 1
 		console.log(`TEST:`, otherList.currentWordIndex, otherList.currentWord.length, maxSelection);
 	} // Eventually might implement an operation here for custom names
 
@@ -115,6 +122,7 @@ const newWordFromList = (list: StorageLayout): void => {
 			? list.cumulativeFreq[minSelection - 1]
 			: 0)
 
+	console.log(list)
 	console.log(`maxPossibleLength = ${maxPossible}\npossibleWords = ${possibleWords}`)
 
 	// If we don't have any words to pick from, we did something wrong
@@ -207,39 +215,48 @@ copyName.addEventListener("click", function (): void {
 	resetButton(copyName)
 })
 
+const updateForPregen = (): void => {
+	// Transition to pre-generated names
+	// (later will be to custom, then custom -> pre-generated)
+
+	randomGenButtonContainer.style.display = "none"
+	refreshName.style.display = "block"
+	body.style.backgroundColor = "#d4f9ff"
+	console.log(`Updating min/max inputs to ${pregenNames.minLength} -> ${pregenNames.maxLength}`)
+	minCharInput.value = pregenNames.minLength.toString()
+	maxCharInput.value = pregenNames.maxLength.toString()
+
+	newWordFromList(pregenNames)
+}
+
+const updateForRandom = (): void => {
+	// Transition to randomly generated names
+
+	randomGenButtonContainer.style.display = "block"
+	refreshName.style.display = "none"
+	body.style.backgroundColor = "#eadaff"
+	console.log(`Updating min/max inputs to ${adjectives.minLength + nouns.minLength} -> ${adjectives.maxLength + nouns.maxLength}`)
+	minCharInput.value = (adjectives.minLength + nouns.minLength).toString()
+	maxCharInput.value = (adjectives.maxLength + nouns.maxLength).toString()
+
+	newFullName()
+}
+
 // Button listener for copy name button
 switchMode.addEventListener("click", function (): void {
 	// Move to next mode
 	// Change to 3 once custom is implemented
 	currentMode = ++currentMode % 2
 
-	if (currentMode === RANDOM) {
+	if (currentMode === RANDOM)
+		updateForRandom()
 		// Transition to randomly generated names
+	else if (currentMode === PREGEN)
+		updateForPregen()
+	// else if(currentMode === CUSTOM) ...
 
-		randomGenButtonContainer.style.display = "block"
-		refreshName.style.display = "none"
-		body.style.backgroundColor = "#eadaff"
-		console.log(`Updating min/max inputs to ${adjectives.minLength + nouns.minLength} -> ${adjectives.maxLength + nouns.maxLength}`)
-		minCharInput.value = (adjectives.minLength + nouns.minLength).toString()
-		maxCharInput.value = (adjectives.maxLength + nouns.maxLength).toString()
-
-		newFullName()
-	} else if (currentMode === PREGEN) {
-		// Transition to pre-generated names
-		// (later will be to custom, then custom -> pre-generated)
-
-		randomGenButtonContainer.style.display = "none"
-		refreshName.style.display = "block"
-		body.style.backgroundColor = "#d4f9ff"
-		console.log(`Updating min/max inputs to ${pregenNames.minLength} -> ${pregenNames.maxLength}`)
-		minCharInput.value = pregenNames.minLength.toString()
-		maxCharInput.value = pregenNames.maxLength.toString()
-
-		newWordFromList(pregenNames)
-	} else {
-		// To be implemented down the line
-	}
-
+	// Update our current mode in settings so that the next time we open a popup it defaults to that mode
+	chrome.storage.sync.set({defaultMode: currentMode})
 	resetButton(switchMode)
 })
 
@@ -250,3 +267,23 @@ const fixCapitalization = (str: string): string => {
 const capitalizeWord = (str: string): string => {
 	return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
+
+// Executes when the popup is first generated
+chrome.storage.sync.get(['defaultMode'], async (result): Promise<void> => {
+	await loadNameData("../loads/Adjectives.json", adjectives)
+	await loadNameData("../loads/Nouns.json", nouns)
+	await loadPregenNameData()
+
+	console.log("Finished loading default mode")
+
+	console.log(result)
+
+	//If we don't have a valid option for result.defaultMode then 
+	currentMode = (result.defaultMode !== undefined) ? result.defaultMode : PREGEN
+	if(currentMode === RANDOM)
+		updateForRandom()
+	else if(currentMode === PREGEN)
+		updateForPregen()
+
+	console.log("Finished setting up for mode", pregenNames, )
+})

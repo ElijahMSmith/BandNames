@@ -27,7 +27,7 @@ const loadPregenNameData = async (): Promise<void> => {
 		return
 	}
 
-	response.json().then((data): void => {
+	await response.json().then((data): void => {
 		const loadedNames: string[] = data.allNames
 
 		for (let currentName of loadedNames) {
@@ -61,8 +61,7 @@ const loadPregenNameData = async (): Promise<void> => {
 		minCharInput.value = pregenNames.minLength.toString()
 		maxCharInput.value = pregenNames.maxLength.toString()
 
-		newWordFromList(pregenNames)
-		console.log(`Finished loading ${path}`)
+		console.log(`Loaded from ${path} successfully!`)
 	})
 }
 
@@ -72,5 +71,3 @@ refreshName.addEventListener("click", (): void => {
 	newWordFromList(pregenNames)
 	resetButton(refreshName)
 })
-
-loadPregenNameData() // Call that function to load the band names

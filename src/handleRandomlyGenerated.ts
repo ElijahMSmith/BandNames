@@ -1,15 +1,10 @@
-interface StorageLayout {
-	fullList: string[][]
-	cumulativeFreq: number[]
-	minLength: number
-	maxLength: number
-}
-
 const adjectives: StorageLayout = {
 	fullList: [],
 	cumulativeFreq: [],
 	minLength: Number.MAX_SAFE_INTEGER,
 	maxLength: -1,
+	currentWord: "PLACEHOLDER",
+	currentWordIndex: -1,
 }
 
 const nouns: StorageLayout = {
@@ -17,33 +12,11 @@ const nouns: StorageLayout = {
 	cumulativeFreq: [],
 	minLength: Number.MAX_SAFE_INTEGER,
 	maxLength: -1,
+	currentWord: "PLACEHOLDER",
+	currentWordIndex: -1,
 }
 
-interface listIndices {
-	outer: number
-	inner: number
-}
-
-// Because of the way this algorithm picks from a list, this index is accumulated
-// for every name encountered from left to right, even if the first name isn't at an early out-array index.
-const currentAdjective = "PLACEHOLDER"
-const currentNoun: string = "PLACEHOLDER"
-
-const newRandomName = (): void => {
-	if (adjectives.fullList.length === 0) {
-		console.log(
-			"No adjectives loaded due to an error, cannot generate a new name"
-		)
-		return
-	}
-
-	if (nouns.fullList.length === 0) {
-		console.log(
-			"No adjectives loaded due to an error, cannot generate a new name"
-		)
-		return
-	}
-
+const newFullName = (): void => {
 	newRandomAdjective()
 	newRandomNoun()
 }
@@ -55,7 +28,8 @@ const newRandomAdjective = (): void => {
 		)
 		return
 	}
-	//TODO
+	newWordFromList(adjectives)
+	updateSuggestion()
 }
 
 const newRandomNoun = (): void => {
@@ -65,7 +39,8 @@ const newRandomNoun = (): void => {
 		)
 		return
 	}
-	//TODO
+	newWordFromList(nouns)
+	updateSuggestion()
 }
 
 // Get all adjectives and nouns from JSON files
@@ -120,29 +95,21 @@ const loadNameData = async (
 	console.log(`Loaded from ${path} successfully!`)
 }
 
-// Updates after all refreshes have finished, and not in the middle of doing both together
-const updateSuggestion = (): void => {
-	suggestion.innerText = currentAdjective + " " + currentNoun
-}
-
 // Button listener for copy name button
 refreshAdjective.addEventListener("click", (): void => {
 	newRandomAdjective()
-	updateSuggestion()
 	resetButton(refreshName)
 })
 
 // Button listener for copy name button
 refreshNoun.addEventListener("click", (): void => {
 	newRandomNoun()
-	updateSuggestion()
 	resetButton(refreshName)
 })
 
 // Button listener for copy name button
 refreshBoth.addEventListener("click", (): void => {
-	newRandomName()
-	updateSuggestion()
+	newFullName()
 	resetButton(refreshName)
 })
 

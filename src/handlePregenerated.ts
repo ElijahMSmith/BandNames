@@ -71,7 +71,6 @@ const loadPregenNameData = async (): Promise<void> => {
 refreshName.addEventListener("click", (): void => {
 	// Generate new band name for the popup and adjust content sizes
 	newWordFromList(pregenNames)
-	updateSuggestion()
 	resetButton(refreshName)
 })
 

@@ -45,7 +45,7 @@ const updateSuggestion = (): void => {
 	if(currentMode === PREGEN)
 		name = fixCapitalization(pregenNames.currentWord)
 	else if(currentMode === RANDOM)
-		name = `${fixCapitalization(nouns.currentWord)} ${fixCapitalization(adjectives.currentWord)}`
+		name = `${fixCapitalization(adjectives.currentWord)} ${fixCapitalization(nouns.currentWord)}`
 
 	suggestion.innerHTML = fixCapitalization(name)
 
@@ -131,6 +131,7 @@ const newWordFromList = (obj: StorageLayout): void => {
 	console.log(`Changed ${obj.currentWord} -> ${newWord}`)
 	obj.currentWord = newWord
 	obj.currentWordIndex = generated
+	updateSuggestion()
 }
 
 // Briefly changes button color to indicate that it actually pressed
@@ -206,11 +207,13 @@ switchMode.addEventListener("click", function (): void {
 	// Change to 3 once custom is implemented
 	currentMode = ++currentMode % 2
 
+	// Updates called from newWordFromList won't show because mode hasn't changed yet
+	updateSuggestion()
+
 	resetButton(switchMode)
 })
 
 const fixCapitalization = (str: string): string => {
-	//TODO: Split at spaces, map back together where first letter of every word is capitalized
 	return str.split(" ").map(each => capitalizeWord(each)).join(" ")
 }
 

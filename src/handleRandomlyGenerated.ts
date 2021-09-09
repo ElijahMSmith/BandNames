@@ -29,7 +29,6 @@ const newRandomAdjective = (): void => {
 		return
 	}
 	newWordFromList(adjectives)
-	updateSuggestion()
 }
 
 const newRandomNoun = (): void => {
@@ -40,7 +39,6 @@ const newRandomNoun = (): void => {
 		return
 	}
 	newWordFromList(nouns)
-	updateSuggestion()
 }
 
 // Get all adjectives and nouns from JSON files
@@ -93,6 +91,7 @@ const loadNameData = async (
 		}
 	})
 	console.log(`Loaded from ${path} successfully!`)
+	updateSuggestion()
 }
 
 // Button listener for copy name button

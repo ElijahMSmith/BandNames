@@ -1,25 +1,9 @@
 TODOS:
-- Slot to add custom names
-    - Save to a new file - need to be consistent when updating to a new version, so it shouldn't get overwritten on a new version.
-    - Can also ask it to download a copy/export or load from a text file
-- Minimum name length
 
 
 
-- New popup for adding new names (button on main popup that closes current and opens the new one
-    - Allows you to randomly generate adjective and nouns, add to local storage option
-    - Can also input names directly to add into local storage
-    - Need to be able to import and export
-    - Also must keep the generated file of custom names (which loads with the rest of the band names into one big array to pick from)
-        - When extension updates/reloads, that file shouldn't be replaced.
-
-Once random generation is working, it would be cool to have a stored state in the chrome storage that tells us which mode to open to initially
-Defaults to whatever the last used mode was when either the popup or window was open
-
-
-Install "Sync Settings extension"
-
-
-
-CAN WE ABSTRACT THE CHOOSING FROM A LIST FUNCTION SO THAT IT CAN BE USED GIVEN AN OBJECT PASSED IN WITH THAT DATA?
-Would probably want to go back to an object in pregen, rather than pack every time it's called.
+- Store default mode to open to, whatever was open last
+- Update min/max inputs when swapping between layouts
+- newWordFromList doesn't work properly for generating random names since it will make sure both 
+  the noun and adjective independently are between min and max, not collectively
+- Custom names

@@ -1,9 +1,14 @@
 TODOS:
+- JS setup that runs once when the scripts are first loaded to set the mode to whatever the default is, 
+  then perform the html updates and generation
+  - Take the generation out of the loading functions so we aren't generating and overwriting values before they are seen.
 
 
+
+min/max are being updated correctly between layout changes but not for random gen when a new name is 
+created since that doesn't actually work right. Fix that and the min/max issues will resolve themselves
 
 - Store default mode to open to, whatever was open last
-- Update min/max inputs when swapping between layouts
 - newWordFromList doesn't work properly for generating random names since it will make sure both 
   the noun and adjective independently are between min and max, not collectively
 - Custom names

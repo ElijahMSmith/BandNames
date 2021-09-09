@@ -91,7 +91,7 @@ const loadNameData = async (
 		}
 	})
 	console.log(`Loaded from ${path} successfully!`)
-	updateSuggestion()
+	newWordFromList(destination)
 }
 
 // Button listener for copy name button

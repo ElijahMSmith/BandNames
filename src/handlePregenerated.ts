@@ -62,7 +62,6 @@ const loadPregenNameData = async (): Promise<void> => {
 		maxCharInput.value = pregenNames.maxLength.toString()
 
 		newWordFromList(pregenNames)
-		updateSuggestion()
 		console.log(`Finished loading ${path}`)
 	})
 }

@@ -73,6 +73,15 @@
                 padding-bottom: 15px;
             }
 
+            #failedUpdate {
+                color: #ff0000;
+                display: none;
+                margin: auto;
+                text-align: center;
+                font-size: 15px;
+                font-weight: bold;
+            }
+
         </style>
     </head>
     <body>
@@ -101,6 +110,7 @@
             <p id="maxCharLabel">Max Characters: </p>
             <input id="maxCharInput" type="text" pattern="\d*" maxlength="2"></input>
         </div>
+        <p id="failedUpdate">No names possible with the given parameters.</p>
 
         <script src="../src/build/utility.js"></script>
         <script src="../src/build/handlePregenerated.js"></script>

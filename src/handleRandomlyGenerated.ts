@@ -17,6 +17,10 @@ const nouns: StorageLayout = {
 }
 
 const newFullName = (): void => {
+	// Resetting the current word itself isn't necessary for calculations in newWordFromList
+	// If we did that it would look glitchy while updating half the name at a time
+	adjectives.currentWordIndex = -1
+	nouns.currentWordIndex = -1
 	newRandomAdjective()
 	newRandomNoun()
 }

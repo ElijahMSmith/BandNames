@@ -8,7 +8,7 @@ const urlListener = (): void => {
 	const newWindow: Window = window.open(
 		"./html/suggestionPopup.html",
 		"BandNames",
-		"width=500,height=330,status=0,scrollbars=1,resizable=no"
+		"width=500,height=350,status=0,scrollbars=1,resizable=no"
 	)
 	window.blur()
 	newWindow.focus()

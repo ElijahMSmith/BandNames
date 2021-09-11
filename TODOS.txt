@@ -1,5 +1,5 @@
 TODOS:
-Custom names
+- Custom names
 
 Should be able to move to the third mode where you can type in your own name and add it to a list in SYNCED chrome storage so that it doesn't get lost when the extension is removed
 Should be able to export the list of words at any time as a download

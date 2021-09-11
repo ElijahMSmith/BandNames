@@ -1,20 +1,9 @@
 TODOS:
-Figure out why randomGen is still running out of bounds for maxPossible and possibleWords
+Custom names
 
-min/max are being updated correctly between layout changes but not for random gen when a new name is 
-created since that doesn't actually work right. Fix that and the min/max issues will resolve themselves
+Should be able to move to the third mode where you can type in your own name and add it to a list in SYNCED chrome storage so that it doesn't get lost when the extension is removed
+Should be able to export the list of words at any time as a download
+Should also be able to upload a file of words and have them added to the list (if they aren't already in the list)
 
-- Store default mode to open to, whatever was open last
-- newWordFromList doesn't work properly for generating random names since it will make sure both 
-  the noun and adjective independently are between min and max, not collectively
-- Custom names
-
-
-
-TODO: 
-When regenerating both, set both currents to -1 index so that there isn't a cap on what the first word can become
-In that case, should compare currentWord instead of currentIndex for checking if we get the same thing twice in a row
-
-
-Something I think will be a problem at some point: If someone picks a lower min length and we regenerate only one word or both and there aren't anything of few enough characters, what gets displayed?
-- Should set something where the console logs.
+Any names from here should be added to the pregen list
+Should also, in the custom mode, be able to generate from JUST the custom list (another button that takes you to another view like the pregen but with a different list source)

@@ -26,12 +26,16 @@ From there, click the "details" option for this extension and scroll down to "Ex
 
 Use this page to input addition URLs you want this extension to open on. You can also clear this list of URLs and start over. Any action you make on this page is stored away immediately, so don't worry about losing changes made if you close the page!
 
+Note: URL comparisons when deciding to open the popup or not evaluate if the input value you save appears anywhere in the url, opening the popup if so. There is no need to include routes on the page, unless you only want to open the popup at certain places on the desired site.
+
 ## Recent Changes
 
--   Updated the picking algorithm to equally balance all names. The previous algorithm picked a random length of name, then randomly picked one name of that length, causing names with less-common lengths to appear more frequently.
--   Lots of new names!
+-   Migrated to TypeScript for easier development.
+-   Simplified the popups (in new window when opening an added URL and in the popup from clicking the icon) into one HTML page
+-   Added a view to generate random band names from an extensive list of nouns and adjectives. Elements from each view hide if they are exclusive to that view and another is loaded.
+-   Added the ability to switch the popup between several different views/modes: pre-generated names, random names, and custom names (to be added later and currently disabled).
+-   Popup now opens to the mode you last used rather than the pre-generated names like it used to.
 
 ### Future Changes
 
--   Allow for in-popup generation of new names
 -   Allow for custom names to be added and export your current list of names

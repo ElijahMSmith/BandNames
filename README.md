@@ -6,7 +6,8 @@ When arriving at a site you've determine worthy of your creative genius, this ex
 
 You can easily copy this name to your clipboard by clicking the button on the popup or close the promp and reopen it for a different name.
 
-## How to enable this extension (not yet available on the chrome store, if ever)
+## This extension is available on the Chrome web store: https://chrome.google.com/webstore/detail/bandnames/igebaldbbllkgbjnlpoccijdnoogkcml
+## Alternatively, you can load this extension unpacked to your browser by following the following instructions:
 
 You can get a copy of all the files in this extension by cloning this repository to the desired location with `git clone https://github.com/ElijahMSmith/BandNames`
 

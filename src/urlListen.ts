@@ -1,80 +1,44 @@
-// ------------------ Setup Section ------------------
-
 // Global url array so we don't have to reload every update
 let popupUrls: chrome.events.UrlFilter[] = []
 
 // Opens popup when listener called
 const urlListener = (): void => {
-	const newWindow: Window = window.open(
-		"./html/suggestionPopup.html",
-		"BandNames",
-		"width=500,height=350,status=0,scrollbars=1,resizable=no"
+	chrome.windows.create(
+		{
+			width: 500,
+			height: 350,
+			focused: true,
+			url: chrome.runtime.getURL("./html/altPage.html"),
+		},
+		(window) => {}
 	)
-	window.blur()
-	newWindow.focus()
 }
-
-// ---------------- Function Section ----------------
 
 // Remove and reapply urlListener with updated array
 const reloadUrlListener = (): void => {
 	chrome.webNavigation.onCompleted.removeListener(urlListener)
 
 	// Set new listener with updated url list
-	// If array is empty, will register every URL instead of none (not sure why it does this)
-	// As such, we'll just not add the popup listener period in this case
+	// An empty URL filter registers for EVERY single URL, which we don't want
 	if (popupUrls.length > 0)
 		chrome.webNavigation.onCompleted.addListener(urlListener, {
 			url: popupUrls,
 		})
 
-	// Remove listener with old url list
 	console.log("Added listener for " + popupUrls.length + " urls:")
 	console.log(popupUrls)
-
-	// For easy validation after reloading in development
-	urlListener()
 }
 
-// ---------------- Procedural Section ----------------
-
-// Every time an event this script listens to triggers the script to perform an action, this function is run.
-// This way, we can repopulate the array after the browser restarts and as such, popupUrls is cleared,
-// When we next navigate to a URL recognized by urlListener the last time it was applied.
+// Get all the URLs from storage
 chrome.storage.sync.get({ allUrls: [] }, function (result): void {
 	console.log("Updating URL set")
 
-	// Reinsert all urls to storage, log to console success
-	// Get urls array from allUrls key
 	const urlsArray: string[] = result.allUrls
-
-	if (urlsArray.length == 0) {
-		console.log("install")
-
-		// First set this url in storage
-		chrome.storage.sync.set(
-			{ allUrls: ["discord.com"] },
-			function (): void {
-				console.log(
-					"Stored discord.com as the default site for this popup to be enabled. You can remove this site at any time in the options page."
-				)
-			}
-		)
-
-		// Set default to discord
-		urlsArray.push("discord.com")
-	}
-
-	// For each url string
-	for (let i = 0; i < urlsArray.length; i++) {
-		// Create new p element and append to urlsDiv
+	for (let i = 0; i < urlsArray.length; i++)
 		popupUrls.push({ hostContains: urlsArray[i] })
-	}
 
 	reloadUrlListener()
 })
-
-// ------------------ Message Listener ------------------
 
 // Depending on the action to be taken, update the popupUrls list, then reset web listener
 // NOTE: This listener only updates the array locally. Storage changes are made options.js, which will be loaded automatically next startup
@@ -97,10 +61,8 @@ chrome.runtime.onMessage.addListener(
 				}
 			}
 
-			// Remove the element from the array
 			if (index >= 0) popupUrls.splice(index, 1)
 		} else if (requestJSON.takeAction === "clear") {
-			// Clear the array
 			popupUrls = []
 		} else {
 			// Not our problem

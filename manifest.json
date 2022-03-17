@@ -2,7 +2,7 @@
 	"name": "BandNames",
 	"version": "1.0.1",
 	"description": "Find a quick and hilarious new username for sites like Discord and Kahoot!",
-	"manifest_version": 2,
+	"manifest_version": 3,
 	"permissions": [
 		"declarativeContent",
 		"clipboardWrite",
@@ -10,10 +10,9 @@
 		"webNavigation"
 	],
 	"background": {
-		"scripts": ["/src/build/urlListen.js"],
-		"persistent": false
+		"service_worker": "/src/build/urlListen.js"
 	},
-	"browser_action": {
+	"action": {
 		"default_popup": "/html/suggestionPopup.html",
 		"default_icon": {
 			"16": "/images/BandNames_16.png",

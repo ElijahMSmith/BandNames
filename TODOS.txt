@@ -1,4 +1,5 @@
 TODOS:
+- Revisit min/max logic for random names, which doesn't seem to work
 - Custom names
 
 Should be able to move to the third mode where you can type in your own name and add it to a list in SYNCED chrome storage so that it doesn't get lost when the extension is removed

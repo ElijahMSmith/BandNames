@@ -6,41 +6,47 @@ interface StorageLayout {
 	maxLength: number;
 	currentWord: string;
 	currentWordIndex: number;
+	prevWordIndex: number;
 }
 
 const adjectives: StorageLayout = {
-	type: "adjectives",
+	type: 'adjectives',
 	fullList: [],
 	cumulativeFreq: [],
 	minLength: Number.MAX_SAFE_INTEGER,
 	maxLength: -1,
-	currentWord: "TEMP",
+	currentWord: 'TEMP',
 	currentWordIndex: -1,
+	prevWordIndex: -1,
 };
 
 const nouns: StorageLayout = {
-	type: "nouns",
+	type: 'nouns',
 	fullList: [],
 	cumulativeFreq: [],
 	minLength: Number.MAX_SAFE_INTEGER,
 	maxLength: -1,
-	currentWord: "TEMP",
+	currentWord: 'TEMP',
 	currentWordIndex: -1,
+	prevWordIndex: -1,
 };
 
 let pregenNames: StorageLayout = {
-	type: "pre-generated",
+	type: 'pre-generated',
 	fullList: [],
 	cumulativeFreq: [],
 	minLength: Number.MAX_SAFE_INTEGER,
 	maxLength: -1,
-	currentWord: "PLACEHOLDER",
+	currentWord: 'PLACEHOLDER',
 	currentWordIndex: -1,
+	prevWordIndex: -1,
 };
 
 const newFullName = (): void => {
 	// Set current indices to placeholders and generate both
+	adjectives.prevWordIndex = adjectives.currentWordIndex;
 	adjectives.currentWordIndex = -1;
+	nouns.prevWordIndex = nouns.currentWordIndex;
 	nouns.currentWordIndex = -1;
 	newRandomAdjective();
 	newRandomNoun();
@@ -49,7 +55,7 @@ const newFullName = (): void => {
 const newRandomAdjective = (): void => {
 	if (adjectives.fullList.length === 0) {
 		console.log(
-			"No adjectives loaded due to an error, cannot generate a new name"
+			'No adjectives loaded due to an error, cannot generate a new name'
 		);
 		return;
 	}
@@ -59,7 +65,7 @@ const newRandomAdjective = (): void => {
 const newRandomNoun = (): void => {
 	if (nouns.fullList.length === 0) {
 		console.log(
-			"No adjectives loaded due to an error, cannot generate a new name"
+			'No adjectives loaded due to an error, cannot generate a new name'
 		);
 		return;
 	}
@@ -99,7 +105,7 @@ const loadNameData = async (
 		let len: number;
 
 		// For pregen names we remove the spaces between first
-		if (destination === pregenNames) len = current.replace(/ /g, "").length;
+		if (destination === pregenNames) len = current.replace(/ /g, '').length;
 		else len = current.length;
 
 		destination.minLength = Math.min(destination.minLength, len);
@@ -127,22 +133,22 @@ const loadNameData = async (
 	console.log(`Loaded from ${path} successfully!`);
 };
 
-refreshAdjective.addEventListener("click", (): void => {
+refreshAdjective.addEventListener('click', (): void => {
 	newRandomAdjective();
 	resetButton(refreshName);
 });
 
-refreshNoun.addEventListener("click", (): void => {
+refreshNoun.addEventListener('click', (): void => {
 	newRandomNoun();
 	resetButton(refreshName);
 });
 
-refreshBoth.addEventListener("click", (): void => {
+refreshBoth.addEventListener('click', (): void => {
 	newFullName();
 	resetButton(refreshName);
 });
 
-refreshName.addEventListener("click", (): void => {
+refreshName.addEventListener('click', (): void => {
 	// Generate new band name for the popup
 	newWordFromList(pregenNames);
 	resetButton(refreshName);

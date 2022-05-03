@@ -221,11 +221,13 @@ const newWordFromList = (list: StorageLayout): void => {
 
 	console.log(list);
 	console.log(
-		`maxPossibleLength = ${maxPossibleLength}\nminPossibleLength = ${minPossibleLength}\npossibleWords = ${possibleWords}`
+		`maxPossibleLength = ${maxPossibleLength}\nminPossibleLength = ${minPossibleLength}\npossibleWords = ${
+			minPossibleLength > maxPossibleLength ? 0 : possibleWords
+		}`
 	);
 
 	// If we don't have any words to pick from, we did something wrong
-	if (possibleWords <= 0) {
+	if (possibleWords <= 0 || minPossibleLength > maxPossibleLength) {
 		console.log(
 			'No words loaded to pick from. Make the maximum length field larger or regenerate the entire name.'
 		);
@@ -240,7 +242,11 @@ const newWordFromList = (list: StorageLayout): void => {
 	let generated: number;
 	do {
 		generated = Math.floor(Math.random() * possibleWords) + minGen;
-	} while (possibleWords > 1 && generated === list.currentWordIndex);
+	} while (
+		possibleWords > 1 &&
+		(generated === list.currentWordIndex ||
+			generated === list.prevWordIndex)
+	);
 
 	console.log(
 		`${possibleWords} possible names between ${minGen}-${

@@ -1,6 +1,4 @@
 TODOS:
-- Random gen with 36-36 can generate the exact same combo if generating both, even though only one adjective is allowed
-    - Fix so that you can only generate same noun/adjective if they only have one possible option. Otherwise, choose another!
 - Custom names
 
 Should be able to move to the third mode where you can type in your own name and add it to a list in SYNCED chrome storage so that it doesn't get lost when the extension is removed

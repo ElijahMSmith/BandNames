@@ -1,323 +1,380 @@
-interface StorageLayout {
-	fullList: string[][]
-	cumulativeFreq: number[]
-	minLength: number
-	maxLength: number
-	currentWord: string
-	currentWordIndex: number
-}
-
 // Tag imports
-const suggestionHeader: HTMLElement = document.getElementById(
-	"suggestionHeader"
-)
-const suggestion: HTMLElement = document.getElementById("suggestion")
+const suggestionHeader: HTMLElement =
+	document.getElementById('suggestionHeader');
+const suggestion: HTMLElement = document.getElementById('suggestion');
 
 // Buttons on all modes
-const copyName = <HTMLButtonElement>document.getElementById("copyName")
-const switchMode = <HTMLButtonElement>document.getElementById("switchMode")
+const copyName = <HTMLButtonElement>document.getElementById('copyName');
+const switchMode = <HTMLButtonElement>document.getElementById('switchMode');
 
 // Conditional elements depending on active page
 const randomGenButtonContainer: HTMLElement = document.getElementById(
-	"randomGenButtonContainer"
-)
-const refreshName = <HTMLButtonElement>document.getElementById("refreshName")
+	'randomGenButtonContainer'
+);
+const refreshName = <HTMLButtonElement>document.getElementById('refreshName');
 const refreshAdjective = <HTMLButtonElement>(
-	document.getElementById("refreshAdjective")
-)
-const refreshNoun = <HTMLButtonElement>document.getElementById("refreshNoun")
-const refreshBoth = <HTMLButtonElement>document.getElementById("refreshBoth")
+	document.getElementById('refreshAdjective')
+);
+const refreshNoun = <HTMLButtonElement>document.getElementById('refreshNoun');
+const refreshBoth = <HTMLButtonElement>document.getElementById('refreshBoth');
 
 // Character inputs
 const maxCharInput: HTMLInputElement = <HTMLInputElement>(
-	document.getElementById("maxCharInput")
-)
+	document.getElementById('maxCharInput')
+);
 const minCharInput: HTMLInputElement = <HTMLInputElement>(
-	document.getElementById("minCharInput")
-)
+	document.getElementById('minCharInput')
+);
 
 // Hidden text for when a name update fails because there aren't any words short enough
-const failedUpdate: HTMLElement = document.getElementById("failedUpdate")
-const body: HTMLElement = document.getElementsByTagName("body")[0]
+const failedUpdate: HTMLElement = document.getElementById('failedUpdate');
+const body: HTMLElement = document.getElementsByTagName('body')[0];
 
 // Custom not currently in use, but will be at some point
 const PREGEN = 0,
 	RANDOM = 1,
-	CUSTOM = 2
-let currentMode: number = PREGEN
+	CUSTOM = 2;
+let currentMode: number = PREGEN;
 
 const updateSuggestion = (): void => {
-	let name: string
+	console.log('Current Mode: ' + currentMode);
+
+	let name: string;
 	if (currentMode === PREGEN)
-		name = fixCapitalization(pregenNames.currentWord)
+		name = fixCapitalization(pregenNames.currentWord);
 	else if (currentMode === RANDOM)
 		name = `${fixCapitalization(
 			adjectives.currentWord
-		)} ${fixCapitalization(nouns.currentWord)}`
+		)} ${fixCapitalization(nouns.currentWord)}`;
 
-	suggestion.innerHTML = fixCapitalization(name)
+	suggestion.innerText = fixCapitalization(name);
 
-	console.log(`Updating suggestion to ${suggestion.innerText}`)
+	console.log(`Updating suggestion to ${suggestion.innerText}`);
 	// If a previous update failed, then we can now hide because this one worked
-	failedUpdate.style.display = "none"
-}
+	failedUpdate.style.display = 'none';
+};
 
 const newWordFromList = (list: StorageLayout): void => {
 	// Pick new name and set new text
 	let minInput: string = minCharInput.value,
-		maxInput: string = maxCharInput.value
-	const numberRegex = /^[0-9]{1,2}$/
+		maxInput: string = maxCharInput.value;
+	const numberRegex = /^[0-9]{1,2}$/;
 
 	// Begin sanitizing min/max input values
-	if (!numberRegex.test(minInput)) minInput = list.minLength.toString()
-	if (!numberRegex.test(maxInput)) maxInput = list.maxLength.toString()
+	if (!numberRegex.test(minInput)) minInput = list.minLength.toString();
+	if (!numberRegex.test(maxInput)) maxInput = list.maxLength.toString();
 
 	// Parse that value into an integer, replacing it if out of bounds with the correct bound
-	let minSelection: number = parseInt(minInput)
-	let maxSelection: number = parseInt(maxInput)
+	let minSelection: number = parseInt(minInput);
+	let maxSelection: number = parseInt(maxInput);
 
 	// Get combined min/max (adjective + noun for random, pregenNames for pregen)
 	const compareMin =
 		list === pregenNames
 			? pregenNames.minLength
-			: adjectives.minLength + nouns.minLength
+			: adjectives.minLength + nouns.minLength;
 	const compareMax =
 		list === pregenNames
 			? pregenNames.maxLength
-			: adjectives.maxLength + nouns.maxLength
+			: adjectives.maxLength + nouns.maxLength;
 
 	// Fix minSelection to not exceed either min or max boundaries
-	if (minSelection < compareMin) minSelection = compareMin
-	if (minSelection > compareMax) minSelection = compareMax
+	if (minSelection < compareMin) minSelection = compareMin;
+	if (minSelection > compareMax) minSelection = compareMax;
 
 	// Fix maxSelection to not exceed either min or max boundaries
-	if (maxSelection < compareMin) maxSelection = compareMin
-	if (maxSelection > compareMax) maxSelection = compareMax
+	if (maxSelection < compareMin) maxSelection = compareMin;
+	if (maxSelection > compareMax) maxSelection = compareMax;
 
 	// Fix maxSelection being less than minSelection
 	if (maxSelection < minSelection) {
-		const temp = maxSelection
-		maxSelection = minSelection
-		minSelection = temp
+		const temp = maxSelection;
+		maxSelection = minSelection;
+		minSelection = temp;
 	}
 
 	// Reset input values if min/max were updated
-	minCharInput.value = minSelection.toString()
-	maxCharInput.value = maxSelection.toString()
+	minCharInput.value = minSelection.toString();
+	maxCharInput.value = maxSelection.toString();
 
 	console.log(
 		`minSelection = ${minSelection}, maxSelection = ${maxSelection}`
-	)
+	);
+
+	/*
+
+    Length constraints on generating a random noun/adjective
+
+    Parameters:
+
+    minWordLength = smallest word in this list
+    maxWordLength = longest word in this list
+
+    minOtherList = smallest word in other list
+    maxOtherList = longest word in other list
+    otherLength = exact length of other word
+
+    minParam = minimum total generation length
+    maxParam = maximum total generation length
+
+    Random gen:
+
+    If other list ISN'T generated,
+        Math.max(minParam - maxOtherList, minWordLength) -> Math.min(maxParam - minOtherList, maxWordLength)
+    If other list IS generated,
+        Math.max(minParam - otherLength, minWordLength) -> Math.min(maxParam - otherLength, maxWordLength)
+
+
+    Ex:
+
+    CASE 1
+    Noun: 5 -> 22
+    Adjective: 13 -> 24
+
+    minParam = 18
+    maxParam = 46
+
+    Noun:
+    gen = Math.max(18 - 24, 5) -> Math.min(46 - 13, 22) = 5 -> 22
+    Choose 22
+
+    Adjective:
+    gen = Math.max(18 - 22, 13) -> Math.min(46 - 22, 24) = 13 -> 24
+
+    --------------------------------------
+
+    CASE 2:
+    Noun: 5 -> 22
+    Adjective: 13 -> 24
+
+    minParam = 24
+    maxParam = 28
+
+    Noun:
+    gen = Math.max(24 - 24, 5) -> Math.min(28 - 13, 22) = 5 -> 15
+    Choose 7
+
+    Adjective:
+    gen = Math.max(24 - 7, 13) -> Math.min(28 - 7, 24) = 17 -> 21
+
+    --------------------------------------
+
+    CASE 3:
+    Noun: 7 -> 22
+    Adjective: 5 -> 8
+
+    minParam = 17
+    maxParam = 22
+
+    Noun:
+    gen = Math.max(17 - 8, 7) -> Math.min(22 - 5, 22) = 9 -> 17
+    Choose 9
+
+    Adjective:
+    gen = Math.max(17 - 9, 5) -> Math.min(22 - 9, 8) = 8 -> 8
+
+    */
 
 	// Minimum possible length of the new thing being generated
-	let minPossibleLength: number
+	let minPossibleLength: number;
 	if (list === pregenNames) {
 		// Only generating one thing, so min length stays the same
-		minPossibleLength = minSelection
+		minPossibleLength = minSelection;
 	} else if (list === adjectives || list === nouns) {
 		// Generating one of two things
-		const otherList = list === adjectives ? nouns : adjectives
+		const otherList = list === adjectives ? nouns : adjectives;
 
-		// Other word not generated, we can generate anything from our list
-		if (otherList.currentWordIndex === -1)
-			minPossibleLength = list.minLength
-		// Other word already generated, make sure the combined length is at least
-		// the total minimum required
-		else
-			minPossibleLength = Math.max(
-				list.minLength,
-				minSelection - otherList.currentWord.length
-			)
+		// Other word not generated, we can generate almost anything from this list
+		minPossibleLength = Math.max(
+			minSelection -
+				(otherList.currentWordIndex === -1
+					? otherList.maxLength
+					: otherList.currentWord.length),
+			list.minLength
+		);
 	} // Eventually might implement an operation here for custom names
 
 	// Maximum possible length of the new thing being generated
-	let maxPossibleLength: number
+	let maxPossibleLength: number;
 	if (list === pregenNames) {
 		// Only generating one thing, so max length stays the same
-		maxPossibleLength = maxSelection
+		maxPossibleLength = maxSelection;
 	} else if (list === adjectives || list === nouns) {
 		// Generating one of two things
-		const otherList = list === adjectives ? nouns : adjectives
+		const otherList = list === adjectives ? nouns : adjectives;
 
-		// Other word hasn't been generated, this word can't be longer than
-		// our total max length - the length of the smallest word from the other list
-		if (otherList.currentWordIndex === -1)
-			maxPossibleLength = maxSelection - otherList.minLength
-		// Other word has already been generated, make sure the combined length
-		// doesn't exceed the total maximum allowed
-		else maxPossibleLength = maxSelection - otherList.currentWord.length
-
-		// Don't allow selection of words longer than the longest word in the list
-		if (list.cumulativeFreq.length <= maxPossibleLength)
-			maxPossibleLength = list.cumulativeFreq.length - 1
+		// Other word not generated, we can generate almost anything from this list
+		maxPossibleLength = Math.min(
+			maxSelection -
+				(otherList.currentWordIndex === -1
+					? otherList.minLength
+					: otherList.currentWord.length),
+			list.maxLength
+		);
 	} // Eventually might implement an operation here for custom names
 
 	// The number of words with length less than or equal to maxPossibleLength
 	// and more than or equal to minPossibleLength
 	const possibleWords: number =
 		list.cumulativeFreq[maxPossibleLength] -
-		(list.cumulativeFreq[minPossibleLength - 1] ?? 0)
+		(list.cumulativeFreq[minPossibleLength - 1] ?? 0);
 
-	console.log(list)
+	console.log(list);
 	console.log(
-		`maxPossibleLength = ${maxPossibleLength}\n
-		 minPossibleLength = ${minPossibleLength}\n
-		 possibleWords = ${possibleWords}`
-	)
+		`maxPossibleLength = ${maxPossibleLength}\nminPossibleLength = ${minPossibleLength}\npossibleWords = ${possibleWords}`
+	);
 
 	// If we don't have any words to pick from, we did something wrong
-	if (possibleWords === 0) {
+	if (possibleWords <= 0) {
 		console.log(
-			"No words loaded to pick from. Make the maximum length field larger or regenerate the entire name."
-		)
-		failedUpdate.style.display = "block"
-		return
+			'No words loaded to pick from. Make the maximum length field larger or regenerate the entire name.'
+		);
+		failedUpdate.style.display = 'block';
+		return;
 	}
 
-	const minGen: number = list.cumulativeFreq[minPossibleLength - 1] ?? 0
+	const minGen: number = list.cumulativeFreq[minPossibleLength - 1] ?? 0;
 
 	// Generate an index minGen <= index < minGen + range
 	// Don't generate the same name two times in a row, unless there are no other names to generate
-	let generated: number
+	let generated: number;
 	do {
-		generated = Math.floor(Math.random() * possibleWords) + minGen
-	} while (possibleWords > 1 && generated === list.currentWordIndex)
+		generated = Math.floor(Math.random() * possibleWords) + minGen;
+	} while (possibleWords > 1 && generated === list.currentWordIndex);
 
 	console.log(
 		`${possibleWords} possible names between ${minGen}-${
 			minGen + possibleWords - 1
 		}, generated index ${generated}`
-	)
+	);
 
 	// Move to the correct outer array index where the name in the full list that corresponds to the generated index lies
-	let outerIndex = 0
-	while (generated >= list.cumulativeFreq[outerIndex]) outerIndex++
+	let outerIndex = 0;
+	while (generated >= list.cumulativeFreq[outerIndex]) outerIndex++;
 
 	// Pick the correct name corresponding to the generated index (generated - previous list.cumulativeFreq value) in the array at outerIndex
 	const innerIndex: number =
-		generated -
-		(list.cumulativeFreq[outerIndex - 1]
-			? list.cumulativeFreq[outerIndex - 1]
-			: 0)
+		generated - (list.cumulativeFreq[outerIndex - 1] ?? 0);
 
 	// Pick the name and update suggestion text
-	const newWord: string = list.fullList[outerIndex][innerIndex]
-	console.log(`Changed ${list.currentWord} -> ${newWord}`)
-	list.currentWord = newWord
-	list.currentWordIndex = generated
-	updateSuggestion()
-}
+	const newWord: string = list.fullList[outerIndex][innerIndex];
+	console.log(`Changed ${list.currentWord} -> ${newWord}`);
+	list.currentWord = newWord;
+	list.currentWordIndex = generated;
+
+	updateSuggestion();
+};
 
 // Briefly changes button color to indicate that it actually pressed
 const resetButton = (button: HTMLButtonElement): void => {
 	// Show button has been clicked by changing appearance slightly
-	button.style.backgroundColor = "#ff3340"
+	button.style.backgroundColor = '#ff3340';
 
 	// After brief delay, reset button to default style
 	setTimeout((): void => {
-		button.style.backgroundColor = "#ff737c"
-	}, 100)
-}
+		button.style.backgroundColor = '#ff737c';
+	}, 100);
+};
 
 // Copies text input (suggested band name) to clipboard
 const copyTextToClipboard = (text: string): void => {
 	// Creates a temporary text box to copy from
-	const copyFrom: HTMLTextAreaElement = document.createElement("textarea")
-	copyFrom.textContent = text
-	document.body.appendChild(copyFrom)
+	const copyFrom: HTMLTextAreaElement = document.createElement('textarea');
+	copyFrom.textContent = text;
+	document.body.appendChild(copyFrom);
 
 	// Copy text, deselect box (blur), the remove
-	copyFrom.select()
-	document.execCommand("copy")
-	copyFrom.blur()
-	document.body.removeChild(copyFrom)
-}
+	copyFrom.select();
+	document.execCommand('copy');
+	copyFrom.blur();
+	document.body.removeChild(copyFrom);
+};
 
 // Button listener for copy name button
-copyName.addEventListener("click", function (): void {
-	copyTextToClipboard(suggestion.innerHTML)
-	resetButton(copyName)
-})
+copyName.addEventListener('click', function (): void {
+	copyTextToClipboard(suggestion.innerHTML);
+	resetButton(copyName);
+});
 
 // Update popup by showing pregen elements and hiding randomgen elements
 const updateForPregen = (): void => {
 	// (later will be to custom, then custom -> pre-generated)
 
-	console.log("Updated for pregen")
-	randomGenButtonContainer.style.display = "none"
-	refreshName.style.display = "block"
-	body.style.backgroundColor = "#d4f9ff"
-	switchMode.innerHTML = "Generate Randomly"
+	console.log('Updated for pregen');
+	randomGenButtonContainer.style.display = 'none';
+	refreshName.style.display = 'block';
+	body.style.backgroundColor = '#d4f9ff';
+	switchMode.innerHTML = 'Generate Randomly';
 	console.log(
 		`Updating min/max inputs to ${pregenNames.minLength} -> ${pregenNames.maxLength}`
-	)
-	minCharInput.value = pregenNames.minLength.toString()
-	maxCharInput.value = pregenNames.maxLength.toString()
+	);
+	minCharInput.value = pregenNames.minLength.toString();
+	maxCharInput.value = pregenNames.maxLength.toString();
 
-	newWordFromList(pregenNames)
-}
+	newWordFromList(pregenNames);
+};
 
 // Update popup by showing randomgen elements and hiding pregen elements
 const updateForRandom = (): void => {
-	console.log("Updated for random")
-	randomGenButtonContainer.style.display = "block"
-	refreshName.style.display = "none"
-	body.style.backgroundColor = "#eadaff"
-	switchMode.innerHTML = "Use Pre-generated"
+	console.log('Updated for random');
+	randomGenButtonContainer.style.display = 'block';
+	refreshName.style.display = 'none';
+	body.style.backgroundColor = '#eadaff';
+	switchMode.innerHTML = 'Use Pre-generated';
 	console.log(
 		`Updating min/max inputs to ${
 			adjectives.minLength + nouns.minLength
 		} -> ${adjectives.maxLength + nouns.maxLength}`
-	)
-	minCharInput.value = (adjectives.minLength + nouns.minLength).toString()
-	maxCharInput.value = (adjectives.maxLength + nouns.maxLength).toString()
+	);
+	minCharInput.value = (adjectives.minLength + nouns.minLength).toString();
+	maxCharInput.value = (adjectives.maxLength + nouns.maxLength).toString();
 
-	newFullName()
-}
+	newFullName();
+};
 
 // Button listener for switching generation modes
-switchMode.addEventListener("click", function (): void {
+switchMode.addEventListener('click', function (): void {
 	// Change below to 3 if custom names implemented
-	currentMode = ++currentMode % 2
-	console.log("newMode = " + currentMode)
+	currentMode = ++currentMode % 2;
+	console.log('newMode = ' + currentMode);
 
-	if (currentMode === RANDOM) updateForRandom()
-	else if (currentMode === PREGEN) updateForPregen()
+	if (currentMode === RANDOM) updateForRandom();
+	else if (currentMode === PREGEN) updateForPregen();
 	// else if(currentMode === CUSTOM) ...
 
 	// Update our current mode in settings so that the next time we
 	// open a popup it defaults to that mode
-	chrome.storage.sync.set({ defaultMode: currentMode })
-	resetButton(switchMode)
-})
+	chrome.storage.sync.set({ defaultMode: currentMode });
+	resetButton(switchMode);
+});
 
 // Capitalize the first letter only of each word in a string
 const fixCapitalization = (str: string): string => {
 	return str
-		.split(" ")
+		.split(' ')
 		.map((each) => capitalizeWord(each))
-		.join(" ")
-}
+		.join(' ');
+};
 
 // Individually capitalize a single word string
 const capitalizeWord = (str: string): string => {
-	return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
-}
+	return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+};
 
 // Executes when the popup is first generated
 chrome.storage.sync.get(
 	{ defaultMode: PREGEN },
 	async (result): Promise<void> => {
-		await loadNameData("../loads/Adjectives.json", adjectives)
-		await loadNameData("../loads/Nouns.json", nouns)
-		await loadNameData("../loads/PreGenerated.json", pregenNames)
+		await loadNameData('../loads/Adjectives.json', adjectives);
+		await loadNameData('../loads/Nouns.json', nouns);
+		await loadNameData('../loads/PreGenerated.json', pregenNames);
 
-		console.log("Finished loading default mode")
-		console.log(result)
+		console.log('Finished loading default mode ' + result.defaultMode);
+		currentMode = result.defaultMode;
 
-		if (result.defaultMode === RANDOM) updateForRandom()
-		else if (result.defaultMode === PREGEN) updateForPregen()
+		if (result.defaultMode === RANDOM) updateForRandom();
+		else if (result.defaultMode === PREGEN) updateForPregen();
 
-		console.log("Finished setting up for mode " + result.defaultMode)
+		console.log('Finished setting up for mode ' + result.defaultMode);
 	}
-)
+);

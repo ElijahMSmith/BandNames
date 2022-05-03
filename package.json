@@ -4,7 +4,8 @@
 	"description": "Find a quick and hilarious new username for sites like Discord and Kahoot!",
 	"main": "index.js",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+        "build": "tsc --build --clean && tsc",
+        "start": "npm run build"
 	},
 	"repository": {
 		"type": "git",

@@ -1,6 +1,6 @@
 {
 	"name": "BandNames",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"description": "Find a quick and hilarious new username for sites like Discord and Kahoot!",
 	"manifest_version": 3,
 	"permissions": [

@@ -1,6 +1,6 @@
 {
 	"name": "bandnames",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "Find a quick and hilarious new username for sites like Discord and Kahoot!",
 	"main": "index.js",
 	"scripts": {

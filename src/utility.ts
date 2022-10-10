@@ -364,7 +364,27 @@ const fixCapitalization = (str: string): string => {
 
 // Individually capitalize a single word string
 const capitalizeWord = (str: string): string => {
-	return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+	let found = false;
+	let newStr = '';
+	for (let i = 0; i < str.length; i++) {
+		let c = str.charAt(i);
+		if (
+			(!found || (i != 0 && str.charAt(i - 1) == '-')) &&
+			charIsLetter(str.charAt(i))
+		) {
+			found = true;
+			newStr += c.toUpperCase();
+		} else {
+			newStr += c;
+		}
+	}
+	return newStr;
+};
+
+const charIsLetter = (char) => {
+	if (typeof char !== 'string') return false;
+
+	return /^[a-zA-Z]{1}$/.test(char);
 };
 
 // Executes when the popup is first generated

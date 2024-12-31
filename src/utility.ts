@@ -40,16 +40,18 @@ const updateSuggestion = (): void => {
 	console.log('Current Mode: ' + currentMode);
 
 	let name: string;
-	if (currentMode === PREGEN)
+	if (currentMode === PREGEN) {
 		name = fixCapitalization(pregenNames.currentWord);
-	else if (currentMode === RANDOM)
-		name = `${fixCapitalization(
-			adjectives.currentWord
-		)} ${fixCapitalization(nouns.currentWord)}`;
+	} else if (currentMode === RANDOM) {
+		name =
+			fixCapitalization(adjectives.currentWord) +
+			' ' +
+			fixCapitalization(nouns.currentWord);
+	}
 
-	suggestion.innerText = fixCapitalization(name);
+	console.log(`Updating suggestion to ${name}`);
+	suggestion.innerText = name;
 
-	console.log(`Updating suggestion to ${suggestion.innerText}`);
 	// If a previous update failed, then we can now hide because this one worked
 	failedUpdate.style.display = 'none';
 };
@@ -362,45 +364,42 @@ const fixCapitalization = (str: string): string => {
 		.join(' ');
 };
 
-// Individually capitalize a single word string
-const capitalizeWord = (str: string): string => {
-	let found = false;
+// capitalizeWord capitalizes the first letter of an individual word as well as
+// the first letter after any hyphens.
+const capitalizeWord = (word: string): string => {
 	let newStr = '';
-	for (let i = 0; i < str.length; i++) {
-		let c = str.charAt(i);
-		if (
-			(!found || (i != 0 && str.charAt(i - 1) == '-')) &&
-			charIsLetter(str.charAt(i))
-		) {
-			found = true;
+	for (let i = 0; i < word.length; i++) {
+		let c = word.charAt(i);
+
+		const isFirstLetter = i == 0;
+		const isAfterHyphen = !isFirstLetter && word.charAt(i - 1) == '-';
+		if (isFirstLetter || isAfterHyphen) {
 			newStr += c.toUpperCase();
 		} else {
 			newStr += c;
 		}
 	}
+    
+	console.log(word + '->' + newStr);
 	return newStr;
 };
 
-const charIsLetter = (char) => {
-	if (typeof char !== 'string') return false;
-
+const charIsLetter = (char: string) => {
 	return /^[a-zA-Z]{1}$/.test(char);
 };
 
-// Executes when the popup is first generated
-chrome.storage.sync.get(
-	{ defaultMode: PREGEN },
-	async (result): Promise<void> => {
+// Loads JSON data from storage when the popup is first loaded
+browser.storage.sync
+	.get({ defaultMode: PREGEN })
+	.then(async ({ defaultMode }) => {
 		await loadNameData('../loads/Adjectives.json', adjectives);
 		await loadNameData('../loads/Nouns.json', nouns);
 		await loadNameData('../loads/PreGenerated.json', pregenNames);
+		console.log('Finished loading JSON files');
 
-		console.log('Finished loading default mode ' + result.defaultMode);
-		currentMode = result.defaultMode;
+		currentMode = defaultMode;
+		if (currentMode === RANDOM) updateForRandom();
+		else if (currentMode === PREGEN) updateForPregen();
 
-		if (result.defaultMode === RANDOM) updateForRandom();
-		else if (result.defaultMode === PREGEN) updateForPregen();
-
-		console.log('Finished setting up for mode ' + result.defaultMode);
-	}
-);
+		console.log('Finished setting up for mode ' + defaultMode);
+	});

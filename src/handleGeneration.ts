@@ -72,41 +72,34 @@ const newRandomNoun = (): void => {
 	newWordFromList(nouns);
 };
 
+type LoadedData = {
+	allWords?: string[];
+	allNames?: string[];
+};
+
 // Get all adjectives and nouns from JSON files
 const loadNameData = async (
 	path: string,
 	destination: StorageLayout
 ): Promise<void> => {
-	const response: Response | void = await fetch(path).catch(function (error) {
-		console.log(`Fetch error at path '${path}: ${error}'`);
-		return;
-	});
-
-	// Error check responses
-	if (!response) {
-		console.log(
-			`Looks like there was a problem - ${path} request response is void`
-		);
-		return;
-	} else if (response.status !== 200) {
-		console.log(
-			`Looks like there was a problem - ${path} response status code: ${response.status}`
-		);
+	let loaded: string[] = [];
+	try {
+		const response = await fetch(path);
+		if (!response.ok) {
+			throw Error(response.statusText);
+		}
+		let data: LoadedData = await response.json();
+		loaded = data.allNames ?? data.allWords!;
+	} catch (error) {
+		console.error(`Error fetching ${path}: ${error}`);
 		return;
 	}
 
-	const data = await response.json();
-	const loaded: string[] =
-		destination === pregenNames ? data.allNames : data.allWords;
 	const fullList: string[][] = destination.fullList;
 	const cumulativeFrequency: number[] = destination.cumulativeFreq;
 
 	for (let current of loaded) {
-		let len: number;
-
-		// For pregen names we remove the spaces between first
-		if (destination === pregenNames) len = current.replace(/ /g, '').length;
-		else len = current.length;
+		const len = current.replace(/ /g, '').length;
 
 		destination.minLength = Math.min(destination.minLength, len);
 		destination.maxLength = Math.max(destination.maxLength, len);

@@ -4,8 +4,9 @@
 	"description": "Find a quick and hilarious new username for sites like Discord and Kahoot!",
 	"main": "index.js",
 	"scripts": {
-		"build": "tsc --build --clean && tsc",
-		"start": "npm run build"
+		"build": "npm run --clean --build",
+		"start": "npm run build",
+		"dev": "tsc --watch"
 	},
 	"repository": {
 		"type": "git",
@@ -18,8 +19,14 @@
 	},
 	"homepage": "https://github.com/ElijahMSmith/BandNames#readme",
 	"devDependencies": {
-		"@types/chrome": "^0.0.180",
-		"@types/node": "^17.0.21",
-		"typescript": "^4.6.2"
+		"@types/chrome": "^0.0.287",
+		"@types/firefox-webext-browser": "^120.0.4",
+		"@types/node": "^22.10.2",
+		"@types/webextension-polyfill": "^0.12.1",
+		"typescript": "^5.7.2",
+		"web-ext-types": "^3.2.1"
+	},
+	"dependencies": {
+		"webextension-polyfill": "^0.12.0"
 	}
 }

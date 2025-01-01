@@ -1,13 +1,18 @@
 # BandNames
 
-BandNames is a Chrome extension that targets sites like Discord where changing your username frequently is a natural habit.
+BandNames is a web extension that targets sites like Discord where changing your username frequently is a natural habit.
 
 When arriving at a site you've determine worthy of your creative genius, this extension can be clicked to view a randomly selected band name that will surely get you a lot of attention one way or another.
 
-You can easily copy this name to your clipboard by clicking the button on the popup or close the promp and reopen it for a different name.
+You can easily copy this name to your clipboard by clicking the button on the popup or close the prompt and reopen it for a different name.
 
-## This extension is available on the Chrome web store: https://chrome.google.com/webstore/detail/bandnames/igebaldbbllkgbjnlpoccijdnoogkcml
-## Alternatively, you can load this extension unpacked to your browser by following the following instructions:
+## Installation Methods
+
+### From the Chrome Web Store
+
+https://chrome.google.com/webstore/detail/bandnames/igebaldbbllkgbjnlpoccijdnoogkcml
+
+### Manual, as an Unpacked Extension
 
 You can get a copy of all the files in this extension by cloning this repository to the desired location with `git clone https://github.com/ElijahMSmith/BandNames`
 
@@ -19,24 +24,7 @@ Next, select "Load unpacked" (which just means the files haven't been compacted 
 
 The extension will now be loaded onto your chrome browser. It is designed to sync with any other browsers that sync to your Google account, so you shouldn't have to do anything if you go to a different device.
 
-## You can update which urls you want this extension to be enabled through the extensions manager.
+### Roadmap
 
-Navigate to the extensions manager page (follow instructions under the previous header).
-
-From there, click the "details" option for this extension and scroll down to "Extension options."
-
-Use this page to input addition URLs you want this extension to open on. You can also clear this list of URLs and start over. Any action you make on this page is stored away immediately, so don't worry about losing changes made if you close the page!
-
-Note: URL comparisons when deciding to open the popup or not evaluate if the input value you save appears anywhere in the url, opening the popup if so. There is no need to include routes on the page, unless you only want to open the popup at certain places on the desired site.
-
-## Recent Changes
-
--   Migrated to TypeScript for easier development.
--   Simplified the popups (in new window when opening an added URL and in the popup from clicking the icon) into one HTML page
--   Added a view to generate random band names from an extensive list of nouns and adjectives. Elements from each view hide if they are exclusive to that view and another is loaded.
--   Added the ability to switch the popup between several different views/modes: pre-generated names, random names, and custom names (to be added later and currently disabled).
--   Popup now opens to the mode you last used rather than the pre-generated names like it used to.
-
-### Future Changes
-
--   Allow for custom names to be added and export your current list of names
+- Allow users to add their own names.
+- Export your custom names to a text file.

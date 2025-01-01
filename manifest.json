@@ -24,6 +24,5 @@
 		"32": "/images/BandNames_32.png",
 		"48": "/images/BandNames_48.png",
 		"128": "/images/BandNames_128.png"
-	},
-	"options_page": "/html/options.html"
+	}
 }

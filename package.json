@@ -4,9 +4,10 @@
 	"description": "Find a quick and hilarious new username for sites like Discord and Kahoot!",
 	"main": "index.js",
 	"scripts": {
-		"build": "npm run --clean --build",
+		"build": "npm run --clean --build && web-ext build -s ./ -a ./out",
 		"start": "npm run build",
-		"dev": "tsc --watch"
+		"dev": "tsc --watch",
+		"dev:firefox": "web-ext run --source-dir ./"
 	},
 	"repository": {
 		"type": "git",
